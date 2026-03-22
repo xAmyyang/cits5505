@@ -398,8 +398,19 @@
       <a href="#" class="sc-nav-link">recipes</a>
       <a href="#" class="sc-nav-link">community</a>
       <a href="#" class="sc-nav-link">saved</a>
-      <button class="sc-nav-btn ghost">log in</button>
-      <button class="sc-nav-btn solid">sign up free</button>
+
+      <!-- Guest state (logged out) -->
+      <div id="guestButtons">
+        <a href="login.html"  class="sc-nav-btn ghost">log in</a>
+        <a href="signup.html" class="sc-nav-btn solid">sign up free</a>
+      </div>
+
+      <!-- Logged-in user pill (hidden until session found) -->
+      <div id="userPill" style="display:none;align-items:center;gap:8px;background:white;border:1.5px solid #F5C4B3;border-radius:99px;padding:4px 14px 4px 4px;cursor:pointer;margin-left:4px;">
+        <div id="userAvatar" style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#D85A30,#D4537E);display:flex;align-items:center;justify-content:center;font-size:14px;color:white;font-weight:900;"></div>
+        <span id="userDisplayName" style="font-size:13px;font-weight:800;color:#D85A30;"></span>
+        <a href="login.html" onclick="Auth.signOut(event)" style="font-size:11px;color:#888780;text-decoration:none;font-weight:700;" title="sign out">✕</a>
+      </div>
     </div>
   </nav>
 
@@ -467,6 +478,29 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth -->
+<script src="auth.js"></script>
+<script>
+  // Restore logged-in state on page load
+  (function () {
+    const session = Auth.getSession();
+    if (!session) return;
 
+    document.getElementById('guestButtons').style.display = 'none';
+
+    const pill    = document.getElementById('userPill');
+    pill.style.display = 'flex';
+    document.getElementById('userAvatar').textContent      = session.name.charAt(0).toUpperCase();
+    document.getElementById('userDisplayName').textContent = session.name.split(' ')[0];
+  })();
+
+  // Sign out helper called from the ✕ in the pill
+  Auth.signOut = function (e) {
+    e.preventDefault();
+    localStorage.removeItem('SC_SESSION');
+    sessionStorage.removeItem('SC_SESSION');
+    window.location.reload();
+  };
+</script>
 </body>
 </html>
