@@ -36,6 +36,7 @@ With a playful and slightly chaotic tone, SurviveChef makes cooking less intimid
 ---
 
 ## 1 Ingredient Away
+This feature is a core part of the SurviveChef experience and reflects the idea of "survival cooking" — helping users make the most out of limited ingredients.
 
 Users can discover recipes that they are just one ingredient away from making.
 
@@ -49,11 +50,28 @@ This feature helps users:
 
 ---
 
-## 👤 User Stories
+## Application Structure
+
+The main pages of the application include:
+
+- Home Page
+- Sign Up / Login Page
+- Ingredient Selection Page
+- Recipe Results Page
+- Recipe Detail Page
+- Add Recipe Page
+- Community Recipes Page
+- Saved Recipes Page
+- User Profile Page
+
+---
+
+## User Stories
 
 ### 1. Account / User Identity
 - As a user, I want to sign up, so that I can create my own account.
 - As a user, I want to log in, so that I can access my personal data and saved recipes.
+- As a user, I want to log out, so that my account remains secure.
 
 ### 2. Survival Cooking Core Flow
 - As a user, I want to select ingredients I already have, so that I can cook with what I own.
