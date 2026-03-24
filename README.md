@@ -49,7 +49,35 @@ This feature helps users:
 
 ---
 
-## 🎨 Design Concept
+## 👤 User Stories
+
+### 1. Account / User Identity
+- As a user, I want to sign up, so that I can create my own account.
+- As a user, I want to log in, so that I can access my personal data and saved recipes.
+
+### 2. Survival Cooking Core Flow
+- As a user, I want to select ingredients I already have, so that I can cook with what I own.
+- As a user, I want to see recipes that I am one ingredient away from, so that I can improve my meal with minimal extra effort.
+- As a user, I want to view recipe details, so that I can follow instructions step-by-step.
+
+### 3. Beginner-Friendly Support
+- As a user, I want to see the difficulty level of each recipe, so that I can choose recipes suitable for my cooking skills.
+
+### 4. Saving / Personal Use
+- As a user, I want to save my favourite recipes, so that I can easily access them again later.
+
+### 5. Community / Other Users’ Data
+- As a user, I want to browse recipes shared by other users, so that I can discover new meal ideas.
+- As a user, I want to upload my own recipe, so that I can share survival cooking ideas with others.
+- As a user, I want to like recipes, so that I can quickly show preference and support other users.
+- As a user, I want to comment on recipes, so that I can share feedback and interact with other users.
+
+### 6. Design / Experience
+- As a user, I want a fun and engaging interface, so that cooking feels less stressful and more enjoyable.
+
+---
+
+## Design Concept
 
 SurviveChef uses a playful, slightly chaotic, and quirky design style.
 
@@ -67,3 +95,38 @@ We aim for:
 - simple and intuitive layout
 
 ---
+
+## Technology Stack
+
+### Frontend
+- HTML
+- CSS
+- Bootstrap
+
+### Backend
+- Flask (planned for later implementation)
+
+### Database
+- SQLite (planned for future integration)
+
+---
+
+## Optional / Future Features
+
+- Recipe search by name
+- Filter recipes by cooking time
+- Exclude specific ingredients (e.g. allergies or preferences)
+- Portion size information for recipes
+- Premium subscription plan
+- Sponsored ingredient / affiliate links
+
+---
+
+## Team Members
+
+| UWA ID | Name | GitHub |
+|--------|------|--------|
+| 24732339 | Seonjeong Jeong | @seon-jeongx2 |
+| 25093361 | Amy Yang | @xAmyyang |
+| 24756957 | Sohaib Ahmed Khan | @Sohaibahmedkhan |
+| 25037834 | Nithin Kumar Soma | @SOMA-NITHIN |
