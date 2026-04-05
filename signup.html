@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — SurviveChef</title>
+
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Nunito font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <!-- SurviveChef brand -->
+  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
+  <link rel="stylesheet" href="survivechef-animations.css">
+  <!-- Auth page styles -->
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- ── Animated background ── -->
+  <div class="auth-bg-gradient" aria-hidden="true"></div>
+  <div class="auth-dots"        aria-hidden="true"></div>
+
+  <!-- Blobs -->
+  <div class="auth-blob blob-pink"   aria-hidden="true"></div>
+  <div class="auth-blob blob-green"  aria-hidden="true"></div>
+  <div class="auth-blob blob-yellow" aria-hidden="true"></div>
+  <div class="auth-blob blob-purple" aria-hidden="true"></div>
+
+  <!-- Floating food -->
+  <span class="auth-food af-1" aria-hidden="true">🥦</span>
+  <span class="auth-food af-2" aria-hidden="true">🍜</span>
+  <span class="auth-food af-3" aria-hidden="true">🍚</span>
+  <span class="auth-food af-4" aria-hidden="true">🧄</span>
+
+  <!-- ── Navbar ── -->
+  <nav class="auth-nav" aria-label="site navigation">
+    <a class="auth-logo" href="index.html">
+      survive<span>chef</span>
+      <span class="auth-logo-badge">✨ beta</span>
+    </a>
+    <span class="auth-nav-hint">
+      already a chef? <a href="login.html">log in →</a>
+    </span>
+  </nav>
+
+  <!-- ── Card ── -->
+  <main class="auth-wrap" id="main-content">
+    <div class="auth-card" role="main">
+
+      <!-- Card header -->
+      <div class="auth-card-head">
+        <span class="auth-card-emoji" aria-hidden="true">🎉</span>
+        <h1 class="auth-card-title">join survivechef!</h1>
+        <p  class="auth-card-sub">free forever — no credit card needed</p>
+      </div>
+
+      <!-- Card body -->
+      <div class="auth-card-body">
+
+        <!-- Social buttons -->
+        <div class="auth-social-row">
+          <button class="auth-social-btn" type="button" id="googleBtn">
+            <span aria-hidden="true">🌐</span> continue with Google
+          </button>
+          <button class="auth-social-btn" type="button" id="appleBtn">
+            <span aria-hidden="true">🍎</span> continue with Apple
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <!-- Sign-up form -->
+        <form id="signupForm" novalidate autocomplete="on">
+
+          <!-- Name -->
+          <div class="auth-field">
+            <label for="signupName">your name</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">👤</span>
+              <input
+                type="text"
+                id="signupName"
+                name="name"
+                class="auth-input"
+                placeholder="Chef Alex"
+                autocomplete="name"
+                required
+              >
+            </div>
+            <p class="auth-field-err" id="signupNameErr" role="alert" aria-live="polite"></p>
+          </div>
+
+          <!-- Email -->
+          <div class="auth-field">
+            <label for="signupEmail">email address</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">✉️</span>
+              <input
+                type="email"
+                id="signupEmail"
+                name="email"
+                class="auth-input"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              >
+            </div>
+            <p class="auth-field-err" id="signupEmailErr" role="alert" aria-live="polite"></p>
+          </div>
+
+          <!-- Password -->
+          <div class="auth-field">
+            <label for="signupPassword">password</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">🔒</span>
+              <input
+                type="password"
+                id="signupPassword"
+                name="password"
+                class="auth-input"
+                placeholder="min 8 characters"
+                autocomplete="new-password"
+                required
+              >
+              <button
+                type="button"
+                class="auth-pw-toggle"
+                data-target="signupPassword"
+                aria-label="show password"
+              >👁</button>
+            </div>
+            <p class="auth-field-err" id="signupPasswordErr" role="alert" aria-live="polite"></p>
+            <!-- Strength meter -->
+            <div class="auth-strength" id="pwStrengthWrap" hidden aria-live="polite">
+              <div class="auth-strength-track">
+                <div class="auth-strength-fill" id="pwStrengthBar"></div>
+              </div>
+              <span class="auth-strength-label" id="pwStrengthLabel"></span>
+            </div>
+          </div>
+
+          <!-- Confirm password -->
+          <div class="auth-field">
+            <label for="signupConfirm">confirm password</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">🔒</span>
+              <input
+                type="password"
+                id="signupConfirm"
+                name="confirm"
+                class="auth-input"
+                placeholder="••••••••"
+                autocomplete="new-password"
+                required
+              >
+              <button
+                type="button"
+                class="auth-pw-toggle"
+                data-target="signupConfirm"
+                aria-label="show password"
+              >👁</button>
+            </div>
+            <p class="auth-field-err" id="signupConfirmErr" role="alert" aria-live="polite"></p>
+          </div>
+
+          <!-- Terms -->
+          <div class="auth-check-row">
+            <input type="checkbox" id="agreeTerms" name="terms" required>
+            <label for="agreeTerms">
+              i agree to the
+              <a href="terms.html" target="_blank">terms of service</a> and
+              <a href="privacy.html" target="_blank">privacy policy</a>
+            </label>
+          </div>
+          <p class="auth-field-err" id="agreeTermsErr" role="alert" aria-live="polite"></p>
+
+          <!-- Submit -->
+          <button type="submit" class="auth-submit-btn" id="signupSubmitBtn">
+            <span class="auth-btn-spinner" aria-hidden="true"></span>
+            <span class="auth-btn-label">create my account 🎉</span>
+          </button>
+
+          <!-- Global error banner -->
+          <div class="auth-alert auth-alert-error" id="signupGlobalErr" role="alert" aria-live="assertive" hidden>
+            <span class="auth-alert-icon">⚠️</span>
+            <span id="signupGlobalErrMsg"></span>
+          </div>
+
+        </form>
+
+        <!-- Switch to login -->
+        <p class="auth-switch">
+          already have an account? <a href="login.html">log in</a>
+        </p>
+
+      </div><!-- /.auth-card-body -->
+    </div><!-- /.auth-card -->
+  </main>
+
+</div><!-- /.auth-page -->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Auth logic -->
+<script src="auth.js"></script>
+<script>
+  // Boot: if already logged in, redirect to home
+  Auth.redirectIfLoggedIn('index.html');
+
+  // Wire up social buttons
+  document.getElementById('googleBtn').addEventListener('click', () => Auth.socialSignIn('Google'));
+  document.getElementById('appleBtn').addEventListener('click',  () => Auth.socialSignIn('Apple'));
+
+  // Live password strength meter
+  document.getElementById('signupPassword').addEventListener('input', () => {
+    Auth.renderPasswordStrength(
+      document.getElementById('signupPassword').value,
+      document.getElementById('pwStrengthBar'),
+      document.getElementById('pwStrengthLabel'),
+      document.getElementById('pwStrengthWrap')
+    );
+  });
+
+  // Live duplicate email check
+  document.getElementById('signupEmail').addEventListener('blur', () => {
+    Auth.checkEmailDuplicate('signupEmail', 'signupEmailErr');
+  });
+
+  // Wire up form
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await Auth.handleSignup();
+  });
+
+  // Wire up password toggles
+  document.querySelectorAll('.auth-pw-toggle').forEach(btn => {
+    btn.addEventListener('click', () => Auth.togglePassword(btn.dataset.target, btn));
+  });
+</script>
+</body>
+</html>
