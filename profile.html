@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurviveChef | My Profile</title>
+ 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
+  <link rel="stylesheet" href="survivechef-animations.css">
+  <link rel="stylesheet" href="profile.css">
+ 
+</head>
+<body>
+    <!-- Navbar -->
+<nav class="sc-navbar">
+  <a class="sc-logo" href="index.html">survive<span>chef</span></a>
+  <div class="sc-nav-links">
+    <a href="#" class="sc-nav-link">recipes</a>
+    <a href="#" class="sc-nav-link">community</a>
+    <a href="saved.html" class="sc-nav-link">saved</a>
+    <a href="profile.html" class="sc-nav-link active">profile</a>
+    <button class="sc-nav-btn ghost">log out</button>
+  </div>
+</nav>
+<!-- Profile Header -->
+<div class="profile-header">
+  <div class="text-center px-3">
+    <div class="avatar-ring sc-fade-up">🧑‍🍳</div>
+    <div class="profile-name sc-fade-up-1">Kimi Kardashian</div>
+    <div class="profile-handle sc-fade-up-1">@KimiKardashian · joined March 2025</div>
+    <div class="profile-bio sc-fade-up-2">Basically a wizard but make it rice 🧙‍♂️ 5 ingredients max or i'm not cooking.</div>
+ 
+    <div class="d-flex justify-content-center gap-3 mb-4 sc-fade-up-3">
+      <div class="stat-pill">
+        <span class="num">12</span>
+        <span class="lbl">recipes</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">48</span>
+        <span class="lbl">saved</span>
+      </div>
+      <div class="stat-pill">
+        <span class="num">136</span>
+        <span class="lbl">likes got</span>
+      </div>
+    </div>
+ 
+    <button class="edit-btn sc-fade-up-3 mb-1">✏️ Edit Profile</button>
+  </div>
+ <!-- Tabs -->
+  <div class="sc-tabs container" style="max-width:860px;">
+    <button class="sc-tab active" onclick="switchTab('my-recipes')">🍳 My Recipes</button>
+    <button class="sc-tab" onclick="switchTab('achievements')">🏅 Achievements</button>
+    
+  </div>
+</div>
+<!-- Page Content -->
+ <div class="page-content">
+ 
+  <!-- Tab: My Recipes -->
+  <div id="tab-my-recipes" class="tab-panel active">
+    <div class="sec-label">recipes you've posted</div>
+    <div class="d-flex flex-column gap-3">
+ 
+      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-1">
+        <div class="recipe-mini-emoji">🍳</div>
+        <div class="flex-grow-1">
+          <div class="recipe-mini-title">Lazy Egg Fried Rice</div>
+          <div class="recipe-mini-meta">Easy 😌 · 4 ingredients · ❤️ 42 likes</div>
+        </div>
+        <span class="badge bg-success">Published</span>
+      </a>
+ 
+      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-2">
+        <div class="recipe-mini-emoji">🍜</div>
+        <div class="flex-grow-1">
+          <div class="recipe-mini-title">Instant Ramen Upgrade</div>
+          <div class="recipe-mini-meta">Easy 😌 · 6 ingredients · ❤️ 67 likes</div>
+        </div>
+        <span class="badge bg-success">Published</span>
+      </a>
+ 
+      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-3">
+        <div class="recipe-mini-emoji">🥚</div>
+        <div class="flex-grow-1">
+          <div class="recipe-mini-title">Cheesy Scrambled Eggs</div>
+          <div class="recipe-mini-meta">Easy 😌 · 3 ingredients · ❤️ 27 likes</div>
+        </div>
+        <span class="badge bg-warning">Draft</span>
+      </a>
+ 
+      <a href="add-recipe.html" class="recipe-mini" style="border-style: dashed; border-color: #C0DD97; background: #F6FBF0; justify-content: center; gap: 8px;">
+        <span style="font-size:20px;">➕</span>
+        <span style="font-size:14px; font-weight:800; color:#3B6D11;">add a new recipe</span>
+      </a>
+ 
+    </div>
+  </div>
+<!-- Tab: Achievements -->
+<div id="tab-achievements" class="tab-panel">
+    <div class="sec-label">your badges</div>
+    <div class="row g-3">
+      <div class="col-4 col-md-2">
+        <div class="achievement">
+          <span class="icon">🍳</span>
+          <div class="title">First Cook</div>
+          <div class="desc">Posted your first recipe</div>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="achievement">
+          <span class="icon">❤️</span>
+          <div class="title">Crowd Pleaser</div>
+          <div class="desc">Got 50+ likes</div>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="achievement">
+          <span class="icon">📦</span>
+          <div class="title">5-Ingredient Hero</div>
+          <div class="desc">Cooked with ≤5 ingredients</div>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="achievement locked">
+          <span class="icon">🔥</span>
+          <div class="title">On Fire</div>
+          <div class="desc">Post 5 recipes</div>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="achievement locked">
+          <span class="icon">🌟</span>
+          <div class="title">Rising Star</div>
+          <div class="desc">Get 100+ likes total</div>
+        </div>
+      </div>
+      <div class="col-4 col-md-2">
+        <div class="achievement locked">
+          <span class="icon">👨‍🍳</span>
+          <div class="title">Master Chef</div>
+          <div class="desc">Post 20 recipes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Tab: Preferences -->
+ 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sc-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+ 
+</body>
+</html>

@@ -1,0 +1,209 @@
+/* ============================================================
+   SurviveChef — Profile Page Styles
+   ============================================================ */
+
+/* ── Profile Header ── */
+.profile-header {
+  background: linear-gradient(135deg, #FFE8F0 0%, #FFF4E0 50%, #EEE8FF 100%);
+  border-bottom: 1.5px solid #F5C4B3;
+  padding: 40px 0 0;
+}
+
+.avatar-ring {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #F5C4B3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  box-shadow: 0 6px 20px rgba(216, 90, 48, 0.15);
+  margin: 0 auto 14px;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a1a18;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.profile-handle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #888780;
+  margin-bottom: 16px;
+}
+
+.profile-bio {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  max-width: 320px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
+
+/* ── Stat Pills ── */
+.stat-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border: 1.5px solid #F5C4B3;
+  border-radius: 16px;
+  padding: 10px 22px;
+}
+
+.stat-pill .num {
+  font-size: 20px;
+  font-weight: 900;
+  color: #D85A30;
+  line-height: 1;
+}
+
+.stat-pill .lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: #888780;
+  margin-top: 2px;
+}
+
+/* ── Profile Tabs ── */
+.sc-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #F5C4B3;
+  padding: 0 24px;
+  margin-top: 24px;
+  background: transparent;
+}
+
+.sc-tab {
+  font-size: 13px;
+  font-weight: 800;
+  color: #888780;
+  padding: 10px 18px;
+  border: none;
+  background: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  margin-bottom: -2px;
+  transition: color 0.15s;
+}
+
+.sc-tab:hover { color: #D85A30; }
+.sc-tab.active { color: #D85A30; border-bottom-color: #D85A30; }
+
+/* ── Tab Panels ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Page Content ── */
+.page-content {
+  max-width: 860px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+/* ── Recipe Mini Card ── */
+.recipe-mini {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border: 1.5px solid #F5C4B3;
+  border-radius: 16px;
+  padding: 14px 16px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recipe-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  color: inherit;
+}
+
+.recipe-mini-emoji {
+  font-size: 36px;
+  width: 56px;
+  height: 56px;
+  background: #FFF8F5;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.recipe-mini-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a18;
+  margin-bottom: 2px;
+}
+
+.recipe-mini-meta {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888780;
+}
+
+/* ── Achievements ── */
+.achievement {
+  background: white;
+  border: 1.5px solid #F5C4B3;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.15s;
+}
+
+.achievement:hover { transform: translateY(-2px); }
+.achievement .icon { font-size: 32px; margin-bottom: 8px; display: block; }
+.achievement .title { font-size: 13px; font-weight: 800; color: #1a1a18; margin-bottom: 2px; }
+.achievement .desc { font-size: 11px; font-weight: 700; color: #888780; }
+.achievement.locked { opacity: 0.4; filter: grayscale(1); }
+
+/* ── Edit Button ── */
+.edit-btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 99px;
+  border: 2px solid #AFA9EC;
+  background: #EEE8FF;
+  color: #534AB7;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.15s;
+}
+
+.edit-btn:hover { transform: translateY(-2px); background: #AFA9EC; }
+
+/* ── Dietary Tag ── */
+.diet-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 13px;
+  border-radius: 99px;
+  background: #EAF3DE;
+  color: #3B6D11;
+  border: 1.5px solid #C0DD97;
+}
+
+/* ── Section Label ── */
+.sec-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #888780;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
