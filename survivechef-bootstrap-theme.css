@@ -490,3 +490,66 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 
 .rounded-pill { border-radius: var(--bs-border-radius-pill) !important; }
 .rounded-sc   { border-radius: 16px !important; }
+
+/* ── Shared Navbar (sc-navbar) ── */
+/* Used across profile, saved, recipe-detail, and other inner pages */
+.sc-navbar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--sc-orange-border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+ 
+.sc-logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--sc-orange);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+.sc-logo span { color: var(--sc-green); }
+ 
+.sc-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+ 
+.sc-nav-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sc-gray-text);
+  padding: 6px 14px;
+  border-radius: 99px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.sc-nav-link:hover,
+.sc-nav-link.active {
+  background: var(--sc-orange-light);
+  color: var(--sc-orange);
+}
+ 
+.sc-nav-btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 7px 16px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.12s;
+  margin-left: 4px;
+}
+.sc-nav-btn:hover { transform: translateY(-2px); }
+.sc-nav-btn.ghost { background: white; color: var(--sc-orange); border: 2px solid var(--sc-orange-border); }
+.sc-nav-btn.solid { background: var(--sc-orange); color: white; }
