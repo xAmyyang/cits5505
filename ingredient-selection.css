@@ -95,6 +95,43 @@
     line-height: 1.6;
 }
 
+.sc-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--sc-gray-border);
+    background: #fff;
+    color: #5f5954;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+.sc-chip:hover {
+    transform: translateY(-1px);
+    background: #fff7ef;
+    border-color: var(--sc-orange-border);
+    color: var(--sc-orange);
+}
+
+.sc-chip.inactive {
+    background: #fff;
+    color: #5f5954;
+}
+
+.sc-chip.selected {
+    background: var(--sc-orange);
+    border-color: var(--sc-orange);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(255, 140, 66, 0.3);
+}
+
 @media (max-width: 767.98px) {
     .ingredient-page-main {
     padding-top: 28px;
