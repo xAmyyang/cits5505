@@ -48,14 +48,16 @@
   <span class="sparkle" style="top:38%;right:6%;width:16px;height:16px;--col:#FFB3C6;--dur:3s;--delay:1.1s;"></span>
 
   <!-- ── Navbar ── -->
+  <!-- ── Navbar ── -->
   <nav class="sc-navbar">
     <a class="sc-logo" href="#">survive<span>chef</span><span class="sc-logo-badge">✨ beta</span></a>
-    <div class="sc-nav-links">
+    <!-- Auth area: JS will replace the buttons if logged in -->
+    <div class="sc-nav-links" id="sc-nav-auth">
       <a href="#" class="sc-nav-link">recipes</a>
       <a href="#" class="sc-nav-link">community</a>
       <a href="#" class="sc-nav-link">saved</a>
-      <button class="sc-nav-btn ghost">log in</button>
-      <button class="sc-nav-btn solid">sign up free</button>
+      <button class="sc-nav-btn ghost" onclick="window.location.href='login.html'">log in</button>
+      <button class="sc-nav-btn solid" onclick="window.location.href='signup.html'">sign up free</button>
     </div>
   </nav>
 
