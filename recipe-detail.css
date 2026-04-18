@@ -1,0 +1,26 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: #fff8f0;
+}
+
+.recipe-title {
+    font-weight: 900;
+    font-size: 2.5rem;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+button {
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.comment-box p {
+    background: #f1f1f1;
+    padding: 8px;
+    border-radius: 8px;
+}

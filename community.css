@@ -1,0 +1,272 @@
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #fffaf7;
+  color: #1f1f1b;
+}
+
+/* Header */
+.community-header {
+  background: linear-gradient(135deg, #FBEAF0 0%, #FFF4E0 55%, #EEE8FF 100%);
+  padding: 55px 20px 40px;
+  text-align: center;
+  border-bottom: 1.5px solid #f1d4c7;
+}
+
+.community-header h1 {
+  font-size: 34px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: #1a1a18;
+}
+
+.community-header p {
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 16px;
+  font-weight: 600;
+  color: #6f6c66;
+  line-height: 1.6;
+}
+
+.community-actions {
+  margin-top: 22px;
+}
+
+.share-btn {
+  background: #ff8c69;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.share-btn:hover {
+  background: #f3724d;
+}
+
+/* Controls */
+.community-controls {
+  padding: 28px 20px 10px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1.5px solid #f2cfc1;
+  border-radius: 999px;
+  padding: 12px 18px;
+  max-width: 430px;
+  margin: 0 auto 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a18;
+}
+
+.search-box input::placeholder {
+  color: #a9a59d;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-btn {
+  border: 1.5px solid #f2cfc1;
+  background: white;
+  color: #5f5b55;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #FBEAF0;
+  color: #d25b84;
+  border-color: #efbfd0;
+}
+
+/* Cards */
+.community-recipes {
+  padding: 20px 20px 50px;
+}
+
+.community-card {
+  background: white;
+  border: 1.5px solid #f2d7ca;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.community-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+.card-top {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+}
+
+.card-body-custom {
+  padding: 18px;
+}
+
+.posted-by {
+  font-size: 12px;
+  font-weight: 800;
+  color: #d26a8b;
+  margin-bottom: 8px;
+}
+
+.card-body-custom h3 {
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #1a1a18;
+}
+
+.card-body-custom p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6f6c66;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.recipe-tags span {
+  background: #fff3eb;
+  color: #8b5c4d;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.card-footer-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.social-info {
+  font-size: 13px;
+  font-weight: 800;
+  color: #7b7770;
+}
+
+.view-btn {
+  text-decoration: none;
+  background: #1f1f1b;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: 0.2s ease;
+}
+
+.view-btn:hover {
+  background: #3a3a35;
+  color: white;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.empty-state h4 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a1a18;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #77736c;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* CTA */
+.community-cta {
+  padding: 10px 20px 60px;
+}
+
+.cta-box {
+  background: linear-gradient(135deg, #fff1e8 0%, #fff7f2 100%);
+  border: 1.5px solid #f2d7ca;
+  border-radius: 24px;
+  padding: 34px 24px;
+  text-align: center;
+}
+
+.cta-box h2 {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #1a1a18;
+}
+
+.cta-box p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #6f6c66;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .community-header h1 {
+    font-size: 28px;
+  }
+
+  .community-header p {
+    font-size: 14px;
+  }
+
+  .card-body-custom h3 {
+    font-size: 18px;
+  }
+}
