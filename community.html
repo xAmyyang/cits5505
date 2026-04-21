@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurviveChef | Community</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
+  <link rel="stylesheet" href="survivechef-animations.css">
+  <link rel="stylesheet" href="community.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="sc-navbar">
+    <a class="sc-logo" href="index.html">survive<span>chef</span></a>
+    <div class="sc-nav-links">
+      <a href="ingredient-selection.html" class="sc-nav-link">recipes</a>
+      <a href="community.html" class="sc-nav-link active">community</a>
+      <a href="SavedRecipe.html" class="sc-nav-link">saved</a>
+      <a href="profile.html" class="sc-nav-link">profile</a>
+      <button class="sc-nav-btn ghost">log out</button>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="community-header">
+    <div class="container">
+      <h1>🍲 Community Survival Recipes</h1>
+      <p>
+        Real meals from real people who were also standing in the kitchen thinking,
+        “what do I even make with this?”
+      </p>
+
+      <div class="community-actions">
+        <button class="share-btn">+ Share Your Recipe</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search and filters -->
+  <section class="community-controls">
+    <div class="container">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="search community recipes..." oninput="filterRecipes()">
+      </div>
+
+      <div class="filter-buttons">
+        <button class="filter-btn active" onclick="setFilter('all', event)">All</button>
+        <button class="filter-btn" onclick="setFilter('easy', event)">Easy</button>
+        <button class="filter-btn" onclick="setFilter('quick', event)">Quick</button>
+        <button class="filter-btn" onclick="setFilter('budget', event)">Student Budget</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recipe cards -->
+  <section class="community-recipes">
+    <div class="container">
+      <div class="row g-4" id="recipeGrid">
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="lazy hostel noodles" data-category="quick budget easy">
+          <div class="community-card">
+            <div class="card-top" style="background:#FFF4E0;">🍜</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Ayesha</div>
+              <h3>Lazy Hostel Noodles</h3>
+              <p>Instant noodles upgraded with egg, chilli flakes, and whatever vegetables are still alive in the fridge.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>10 mins</span>
+                <span>Budget</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 18 &nbsp; 💬 4</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="bread pizza rescue" data-category="quick easy">
+          <div class="community-card">
+            <div class="card-top" style="background:#FBEAF0;">🍕</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Daniel</div>
+              <h3>Bread Pizza Rescue</h3>
+              <p>When there is no pizza base, no problem. Bread, ketchup, cheese, and vibes are enough.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>12 mins</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 24 &nbsp; 💬 7</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="one pan garlic rice" data-category="budget easy">
+          <div class="community-card">
+            <div class="card-top" style="background:#EEE8FF;">🍚</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Nina</div>
+              <h3>One Pan Garlic Rice</h3>
+              <p>Simple buttery rice with garlic and a little seasoning. Cheap, filling, and very hard to mess up.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>Budget</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 15 &nbsp; 💬 3</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="egg mayo sandwich" data-category="quick budget easy">
+          <div class="community-card">
+            <div class="card-top" style="background:#FAEEDA;">🥪</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Sam</div>
+              <h3>Egg Mayo Sandwich</h3>
+              <p>A quick sandwich for days when cooking feels like too much effort but being hungry also feels rude.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>8 mins</span>
+                <span>Budget</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 31 &nbsp; 💬 9</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="panic tomato pasta" data-category="easy budget">
+          <div class="community-card">
+            <div class="card-top" style="background:#FFE8E8;">🍝</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Mia</div>
+              <h3>Panic Tomato Pasta</h3>
+              <p>Boil pasta, add tomato sauce, garlic, and hope for the best. Somehow it always works.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>Budget</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 21 &nbsp; 💬 5</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 recipe-item" data-title="leftover fried rice" data-category="quick easy budget">
+          <div class="community-card">
+            <div class="card-top" style="background:#EAF3DE;">🍳</div>
+            <div class="card-body-custom">
+              <div class="posted-by">Posted by Ryan</div>
+              <h3>Leftover Fried Rice</h3>
+              <p>The best recipe for using random leftovers and pretending it was the plan all along.</p>
+              <div class="recipe-tags">
+                <span>Easy</span>
+                <span>Quick</span>
+                <span>Budget</span>
+              </div>
+              <div class="card-footer-custom">
+                <div class="social-info">❤️ 27 &nbsp; 💬 6</div>
+                <a href="recipe-detail.html" class="view-btn">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="empty-state d-none" id="emptyState">
+        <span class="empty-icon">🍽️</span>
+        <h4>No recipes found</h4>
+        <p>Try another search or filter. The community is chaotic, but not that chaotic.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Small footer section -->
+  <section class="community-cta">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Got a recipe that saved your day?</h2>
+        <p>Share it with the community. It does not have to be fancy. Survival meals count too.</p>
+        <button class="share-btn">Share a Recipe</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let currentFilter = 'all';
+
+    function setFilter(filter, event) {
+      currentFilter = filter;
+
+      document.querySelectorAll('.filter-btn').forEach(button => {
+        button.classList.remove('active');
+      });
+
+      event.target.classList.add('active');
+      filterRecipes();
+    }
+
+    function filterRecipes() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.recipe-item');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        const category = card.dataset.category.toLowerCase();
+
+        const matchesSearch = title.includes(query);
+        const matchesFilter = currentFilter === 'all' || category.includes(currentFilter);
+
+        if (matchesSearch && matchesFilter) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('emptyState').classList.toggle('d-none', visibleCount > 0);
+    }
+  </script>
+
+</body>
+</html>
