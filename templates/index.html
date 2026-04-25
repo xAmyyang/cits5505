@@ -4,16 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SurviveChef</title>
+//applied from app.py
+<!-- 1. Bootstrap 5 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-  <!-- 1. Bootstrap 5 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- 2. Google Fonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
-  <!-- 3. SurviveChef Bootstrap theme -->
-  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
-  <!-- 4. SurviveChef animations -->
-  <link rel="stylesheet" href="survivechef-animations.css">
-  <link rel="stylesheet" href="homepage.css">
+<!-- 2. Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+
+<!-- 3. SurviveChef Bootstrap theme -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+
+<!-- 4. SurviveChef animations -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+
+<!-- 5. Your homepage css -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
   
 </head>
 <body>
@@ -125,8 +130,10 @@
 
 <!-- Bootstrap JS -->
  <!-- after auth JS -->
+<!applied from app.py, make sure auth.js is after bootstrap bundle->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="auth.js"></script>
-<script src="homepage.js"></script>
+
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 </body>
 </html>
