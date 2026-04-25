@@ -4,6 +4,31 @@ A fun and slightly chaotic web app for people who can’t cook… but still need
 
 ---
 
+## Local Setup
+
+Run the project locally with Flask:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+Open the app in your browser at:
+
+```text
+http://127.0.0.1:5000/
+```
+
+If `requirements.txt` is not being used yet, Flask can also be installed manually:
+
+```bash
+pip install flask
+```
+
+---
+
 ## Project Overview
 
 SurviveChef is a recipe web application designed for beginner cooks, students, and people living alone who need quick and simple meals.
@@ -122,7 +147,7 @@ We aim for:
 - Bootstrap
 
 ### Backend
-- Flask (planned for later implementation)
+- Flask
 
 ### Database
 - SQLite (planned for future integration)
