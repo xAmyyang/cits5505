@@ -8,20 +8,20 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
-  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
-  <link rel="stylesheet" href="survivechef-animations.css">
-  <link rel="stylesheet" href="SavedRecipe.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/SavedRecipe.css') }}">
 
 </head>
 <body>
 <!-- Navbar -->
  <nav class="sc-navbar">
-  <a class="sc-logo" href="index.html">survive<span>chef</span></a>
+  <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span></a>
   <div class="sc-nav-links">
-    <a href="#" class="sc-nav-link">recipes</a>
-    <a href="#" class="sc-nav-link">community</a>
-    <a href="saved.html" class="sc-nav-link active">saved</a>
-    <a href="profile.html" class="sc-nav-link">profile</a>
+    <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link">recipes</a>
+    <a href="{{ url_for('community') }}" class="sc-nav-link">community</a>
+    <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link active">saved</a>
+    <a href="{{ url_for('profile') }}" class="sc-nav-link">profile</a>
     <button class="sc-nav-btn ghost">log out</button>
   </div>
 </nav>
@@ -44,7 +44,7 @@
      <div class="row g-3" id="recipeGrid">
  
     <div class="col-6 col-md-4 sc-fade-up-1" data-title="lazy egg fried rice">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#FFF4E0;">🍳</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">Lazy Egg Fried Rice</div>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="col-6 col-md-4 sc-fade-up-2" data-title="spicy ramen upgrade">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#FBEAF0;">🍜</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">Spicy Ramen Upgrade</div>
@@ -66,7 +66,7 @@
     </div>
  
     <div class="col-6 col-md-4 sc-fade-up-3" data-title="3-ingredient pancakes">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#EEE8FF;">🥞</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">3-Ingredient Pancakes</div>
@@ -77,7 +77,7 @@
     </div>
 
     <div class="col-6 col-md-4 sc-fade-up-1" data-title="tuna salad bowl">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#EAF3DE;">🥗</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">Tuna Salad Bowl</div>
@@ -88,7 +88,7 @@
     </div>
 
     <div class="col-6 col-md-4 sc-fade-up-2" data-title="microwave mug pizza">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#FFF0F5;">🍕</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">Microwave Mug Pizza</div>
@@ -99,7 +99,7 @@
     </div>
 
     <div class="col-6 col-md-4 sc-fade-up-3" data-title="banana oat cookies">
-      <a href="recipe-detail.html" class="recipe-card">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
         <div class="recipe-card-thumb" style="background:#FAEEDA;">🍌</div>
         <div class="recipe-card-body">
           <div class="recipe-card-title">Banana Oat Cookies</div>
