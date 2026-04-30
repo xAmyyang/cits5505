@@ -7,20 +7,20 @@
  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
-  <link rel="stylesheet" href="survivechef-bootstrap-theme.css">
-  <link rel="stylesheet" href="survivechef-animations.css">
-  <link rel="stylesheet" href="profile.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
  
 </head>
 <body>
     <!-- Navbar -->
 <nav class="sc-navbar">
-  <a class="sc-logo" href="index.html">survive<span>chef</span></a>
+  <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span></a>
   <div class="sc-nav-links">
-    <a href="community.html" class="sc-nav-link">recipes</a>
-    <a href="#" class="sc-nav-link">community</a>
-    <a href="SavedRecipe.html" class="sc-nav-link">saved</a>
-    <a href="profile.html" class="sc-nav-link active">profile</a>
+    <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link">recipes</a>
+    <a href="{{ url_for('community') }}" class="sc-nav-link">community</a>
+    <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link">saved</a>
+    <a href="{{ url_for('profile') }}" class="sc-nav-link active">profile</a>
     <button class="sc-nav-btn ghost" id="logoutBtn">log out</button>
   </div>
 </nav>
@@ -66,7 +66,7 @@
     <div class="sec-label">recipes you've posted</div>
     <div class="d-flex flex-column gap-3">
  
-      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-1">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-mini sc-fade-up-1">
         <div class="recipe-mini-emoji">🍳</div>
         <div class="flex-grow-1">
           <div class="recipe-mini-title">Lazy Egg Fried Rice</div>
@@ -75,7 +75,7 @@
         <span class="badge bg-success">Published</span>
       </a>
  
-      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-2">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-mini sc-fade-up-2">
         <div class="recipe-mini-emoji">🍜</div>
         <div class="flex-grow-1">
           <div class="recipe-mini-title">Instant Ramen Upgrade</div>
@@ -84,7 +84,7 @@
         <span class="badge bg-success">Published</span>
       </a>
  
-      <a href="recipe-detail.html" class="recipe-mini sc-fade-up-3">
+      <a href="{{ url_for('recipe_detail') }}" class="recipe-mini sc-fade-up-3">
         <div class="recipe-mini-emoji">🥚</div>
         <div class="flex-grow-1">
           <div class="recipe-mini-title">Cheesy Scrambled Eggs</div>
@@ -93,7 +93,7 @@
         <span class="badge bg-warning">Draft</span>
       </a>
  
-      <a href="add-recipe.html" class="recipe-mini" style="border-style: dashed; border-color: #C0DD97; background: #F6FBF0; justify-content: center; gap: 8px;">
+      <a href="#" class="recipe-mini" style="border-style: dashed; border-color: #C0DD97; background: #F6FBF0; justify-content: center; gap: 8px;">
         <span style="font-size:20px;">➕</span>
         <span style="font-size:14px; font-weight:800; color:#3B6D11;">add a new recipe</span>
       </a>
@@ -151,7 +151,7 @@
 <!-- Tab: Preferences -->
  
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="auth.js"></script>
-<script src="profile.js"></script> 
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script> 
 </body>
 </html>
