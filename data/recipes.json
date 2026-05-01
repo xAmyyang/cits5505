@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "egg fried rice",
+    "ingredients": ["egg", "rice", "spring onion", "soy sauce"],
+    "steps": [
+      "cook rice",
+      "scramble egg",
+      "add rice and stir fry",
+      "add soy sauce and mix"
+    ],
+    "time": "10 min",
+    "difficulty": "easy"
+  },
+  {
+    "id": 2,
+    "name": "french toast",
+    "ingredients": ["bread", "egg", "milk"],
+    "steps": [
+      "mix egg and milk",
+      "dip bread",
+      "cook on pan until golden"
+    ],
+    "time": "15 min",
+    "difficulty": "easy"
+  }
+]
