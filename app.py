@@ -1,8 +1,11 @@
 import json
+import re
 from pathlib import Path
 
-from flask import Flask, abort, render_template
+from flask import Flask, abort, redirect, render_template, request, session, url_for
+from werkzeug.security import check_password_hash, generate_password_hash
 
+from db import get_db
 from db import init_app as init_db_app
 
 app = Flask(__name__)
@@ -23,19 +26,109 @@ def get_recipe(recipe_id):
     return next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
 
 
+def validate_email(email):
+    return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email) is not None
+
+
+def find_user_by_email(email):
+    db = get_db()
+    return db.execute(
+        "SELECT * FROM users WHERE email = ?",
+        (email,),
+    ).fetchone()
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=("GET", "POST"))
 def login():
-    return render_template("login.html")
+    if session.get("user_id"):
+        return redirect(url_for("home"))
+
+    error = None
+    form_data = {"email": ""}
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        remember = bool(request.form.get("remember"))
+        form_data["email"] = email
+
+        if not email or not password:
+            error = "please enter both email and password"
+        else:
+            user = find_user_by_email(email)
+            if user is None or not check_password_hash(user["password_hash"], password):
+                error = "invalid email or password"
+            else:
+                session.clear()
+                session["user_id"] = user["id"]
+                session["user_name"] = user["name"]
+                session["user_email"] = user["email"]
+                session.permanent = remember
+                return redirect(url_for("profile"))
+
+    return render_template("login.html", error=error, form_data=form_data)
 
 
-@app.route("/signup")
+@app.route("/signup", methods=("GET", "POST"))
 def signup():
-    return render_template("signup.html")
+    if session.get("user_id"):
+        return redirect(url_for("home"))
+
+    error = None
+    form_data = {"name": "", "email": "", "terms": False}
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm = request.form.get("confirm", "")
+        accepted_terms = bool(request.form.get("terms"))
+
+        form_data = {"name": name, "email": email, "terms": accepted_terms}
+
+        if len(name) < 2:
+            error = "name must be at least 2 characters"
+        elif not validate_email(email):
+            error = "please enter a valid email address"
+        elif len(password) < 8:
+            error = "password must be at least 8 characters"
+        elif password != confirm:
+            error = "passwords do not match"
+        elif not accepted_terms:
+            error = "please agree to the terms to continue"
+        elif find_user_by_email(email) is not None:
+            error = "an account with this email already exists"
+        else:
+            db = get_db()
+            db.execute(
+                """
+                INSERT INTO users (name, email, password_hash)
+                VALUES (?, ?, ?)
+                """,
+                (name, email, generate_password_hash(password)),
+            )
+            db.commit()
+
+            user = find_user_by_email(email)
+            session.clear()
+            session["user_id"] = user["id"]
+            session["user_name"] = user["name"]
+            session["user_email"] = user["email"]
+            session.permanent = True
+            return redirect(url_for("profile"))
+
+    return render_template("signup.html", error=error, form_data=form_data)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
 
 
 @app.route("/ingredients")
