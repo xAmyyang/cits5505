@@ -38,6 +38,12 @@ def find_user_by_email(email):
     ).fetchone()
 
 
+def require_login():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    return None
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -144,12 +150,23 @@ def community():
 
 @app.route("/saved")
 def saved_recipes():
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
     return render_template("SavedRecipe.html")
 
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    return render_template(
+        "profile.html",
+        user_name=session.get("user_name", "chef"),
+        user_email=session.get("user_email", ""),
+    )
 
 
 @app.route("/recipe")
