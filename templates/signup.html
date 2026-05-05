@@ -73,7 +73,7 @@
         <div class="auth-divider"><span>or</span></div>
 
         <!-- Sign-up form -->
-        <form id="signupForm" novalidate autocomplete="on">
+        <form id="signupForm" method="post" action="{{ url_for('signup') }}" novalidate autocomplete="on">
 
           <!-- Name -->
           <div class="auth-field">
@@ -87,6 +87,7 @@
                 class="auth-input"
                 placeholder="Chef Alex"
                 autocomplete="name"
+                value="{{ form_data.name if form_data else '' }}"
                 required
               >
             </div>
@@ -105,6 +106,7 @@
                 class="auth-input"
                 placeholder="you@example.com"
                 autocomplete="email"
+                value="{{ form_data.email if form_data else '' }}"
                 required
               >
             </div>
@@ -168,7 +170,7 @@
 
           <!-- Terms -->
           <div class="auth-check-row">
-            <input type="checkbox" id="agreeTerms" name="terms" required>
+            <input type="checkbox" id="agreeTerms" name="terms" required {% if form_data and form_data.terms %}checked{% endif %}>
             <label for="agreeTerms">
               i agree to the
               <a href="#" target="_blank">terms of service</a> and
@@ -188,6 +190,12 @@
             <span class="auth-alert-icon">⚠️</span>
             <span id="signupGlobalErrMsg"></span>
           </div>
+          {% if error %}
+          <div class="auth-alert auth-alert-error" role="alert" aria-live="assertive">
+            <span class="auth-alert-icon">⚠️</span>
+            <span>{{ error }}</span>
+          </div>
+          {% endif %}
 
         </form>
 
@@ -207,9 +215,6 @@
 <!-- Auth logic -->
 <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script>
-  // Boot: if already logged in, redirect to home
-  Auth.redirectIfLoggedIn('{{ url_for("home") }}');
-
   // Wire up social buttons
   document.getElementById('googleBtn').addEventListener('click', () => Auth.socialSignIn('Google'));
   document.getElementById('appleBtn').addEventListener('click',  () => Auth.socialSignIn('Apple'));
@@ -222,17 +227,6 @@
       document.getElementById('pwStrengthLabel'),
       document.getElementById('pwStrengthWrap')
     );
-  });
-
-  // Live duplicate email check
-  document.getElementById('signupEmail').addEventListener('blur', () => {
-    Auth.checkEmailDuplicate('signupEmail', 'signupEmailErr');
-  });
-
-  // Wire up form
-  document.getElementById('signupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await Auth.handleSignup();
   });
 
   // Wire up password toggles

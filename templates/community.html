@@ -61,123 +61,36 @@
   <section class="community-recipes">
     <div class="container">
       <div class="row g-4" id="recipeGrid">
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="lazy hostel noodles" data-category="quick budget easy">
+        {% set card_colors = ['#FFF4E0', '#FBEAF0', '#EEE8FF', '#FAEEDA', '#FFE8E8', '#EAF3DE'] %}
+        {% set card_icons = ['🍜', '🍳', '🥪', '🍝', '🍚', '🥣'] %}
+        {% for recipe in recipes %}
+        <div
+          class="col-md-6 col-lg-4 recipe-item"
+          data-title="{{ recipe.name }}"
+          data-category="{{ recipe.difficulty }} {{ recipe.time | lower }}"
+        >
           <div class="community-card">
-            <div class="card-top" style="background:#FFF4E0;">🍜</div>
+            <div class="card-top" style="background:{{ card_colors[loop.index0 % card_colors|length] }};">{{ card_icons[loop.index0 % card_icons|length] }}</div>
             <div class="card-body-custom">
-              <div class="posted-by">Posted by Ayesha</div>
-              <h3>Lazy Hostel Noodles</h3>
-              <p>Instant noodles upgraded with egg, chilli flakes, and whatever vegetables are still alive in the fridge.</p>
+              <div class="posted-by">Shared from recipe database</div>
+              <h3>{{ recipe.name | title }}</h3>
+              <p>
+                A simple {{ recipe.difficulty }} recipe with {{ recipe.ingredients | length }}
+                ingredients for days when you need something quick and doable.
+              </p>
               <div class="recipe-tags">
-                <span>Easy</span>
-                <span>10 mins</span>
-                <span>Budget</span>
+                <span>{{ recipe.difficulty | title }}</span>
+                <span>{{ recipe.time }}</span>
+                <span>{{ recipe.ingredients | length }} ingredients</span>
               </div>
               <div class="card-footer-custom">
-                <div class="social-info">❤️ 18 &nbsp; 💬 4</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
+                <div class="social-info">🧾 recipe #{{ recipe.id }}</div>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-btn">View</a>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="bread pizza rescue" data-category="quick easy">
-          <div class="community-card">
-            <div class="card-top" style="background:#FBEAF0;">🍕</div>
-            <div class="card-body-custom">
-              <div class="posted-by">Posted by Daniel</div>
-              <h3>Bread Pizza Rescue</h3>
-              <p>When there is no pizza base, no problem. Bread, ketchup, cheese, and vibes are enough.</p>
-              <div class="recipe-tags">
-                <span>Easy</span>
-                <span>12 mins</span>
-              </div>
-              <div class="card-footer-custom">
-                <div class="social-info">❤️ 24 &nbsp; 💬 7</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="one pan garlic rice" data-category="budget easy">
-          <div class="community-card">
-            <div class="card-top" style="background:#EEE8FF;">🍚</div>
-            <div class="card-body-custom">
-              <div class="posted-by">Posted by Nina</div>
-              <h3>One Pan Garlic Rice</h3>
-              <p>Simple buttery rice with garlic and a little seasoning. Cheap, filling, and very hard to mess up.</p>
-              <div class="recipe-tags">
-                <span>Easy</span>
-                <span>Budget</span>
-              </div>
-              <div class="card-footer-custom">
-                <div class="social-info">❤️ 15 &nbsp; 💬 3</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="egg mayo sandwich" data-category="quick budget easy">
-          <div class="community-card">
-            <div class="card-top" style="background:#FAEEDA;">🥪</div>
-            <div class="card-body-custom">
-              <div class="posted-by">Posted by Sam</div>
-              <h3>Egg Mayo Sandwich</h3>
-              <p>A quick sandwich for days when cooking feels like too much effort but being hungry also feels rude.</p>
-              <div class="recipe-tags">
-                <span>Easy</span>
-                <span>8 mins</span>
-                <span>Budget</span>
-              </div>
-              <div class="card-footer-custom">
-                <div class="social-info">❤️ 31 &nbsp; 💬 9</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="panic tomato pasta" data-category="easy budget">
-          <div class="community-card">
-            <div class="card-top" style="background:#FFE8E8;">🍝</div>
-            <div class="card-body-custom">
-              <div class="posted-by">Posted by Mia</div>
-              <h3>Panic Tomato Pasta</h3>
-              <p>Boil pasta, add tomato sauce, garlic, and hope for the best. Somehow it always works.</p>
-              <div class="recipe-tags">
-                <span>Easy</span>
-                <span>Budget</span>
-              </div>
-              <div class="card-footer-custom">
-                <div class="social-info">❤️ 21 &nbsp; 💬 5</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 recipe-item" data-title="leftover fried rice" data-category="quick easy budget">
-          <div class="community-card">
-            <div class="card-top" style="background:#EAF3DE;">🍳</div>
-            <div class="card-body-custom">
-              <div class="posted-by">Posted by Ryan</div>
-              <h3>Leftover Fried Rice</h3>
-              <p>The best recipe for using random leftovers and pretending it was the plan all along.</p>
-              <div class="recipe-tags">
-                <span>Easy</span>
-                <span>Quick</span>
-                <span>Budget</span>
-              </div>
-              <div class="card-footer-custom">
-                <div class="social-info">❤️ 27 &nbsp; 💬 6</div>
-                <a href="{{ url_for('recipe_detail') }}" class="view-btn">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        {% endfor %}
 
       </div>
 

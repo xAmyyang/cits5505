@@ -73,7 +73,7 @@
         <div class="auth-divider"><span>or</span></div>
 
         <!-- Login form -->
-        <form id="loginForm" novalidate autocomplete="on">
+        <form id="loginForm" method="post" action="{{ url_for('login') }}" novalidate autocomplete="on">
 
           <!-- Email -->
           <div class="auth-field">
@@ -87,6 +87,7 @@
                 class="auth-input"
                 placeholder="you@example.com"
                 autocomplete="email"
+                value="{{ form_data.email if form_data else '' }}"
                 required
               >
             </div>
@@ -137,6 +138,12 @@
             <span class="auth-alert-icon">⚠️</span>
             <span id="loginGlobalErrMsg"></span>
           </div>
+          {% if error %}
+          <div class="auth-alert auth-alert-error" role="alert" aria-live="assertive">
+            <span class="auth-alert-icon">⚠️</span>
+            <span>{{ error }}</span>
+          </div>
+          {% endif %}
 
         </form>
 
@@ -156,18 +163,9 @@
 <!-- Auth logic -->
 <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script>
-  // Boot: if already logged in, redirect to home
-  Auth.redirectIfLoggedIn('{{ url_for("home") }}');
-
   // Wire up social buttons
   document.getElementById('googleBtn').addEventListener('click', () => Auth.socialSignIn('Google'));
   document.getElementById('appleBtn').addEventListener('click',  () => Auth.socialSignIn('Apple'));
-
-  // Wire up form
-  document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    await Auth.handleLogin();
-  });
 
   // Wire up password toggle
   document.querySelectorAll('.auth-pw-toggle').forEach(btn => {
