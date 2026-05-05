@@ -44,6 +44,15 @@ def require_login():
     return None
 
 
+@app.context_processor
+def inject_auth_state():
+    return {
+        "current_user_name": session.get("user_name"),
+        "current_user_email": session.get("user_email"),
+        "is_logged_in": bool(session.get("user_id")),
+    }
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
