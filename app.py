@@ -3,8 +3,14 @@ from pathlib import Path
 
 from flask import Flask, abort, render_template
 
+from db import init_app as init_db_app
+
 app = Flask(__name__)
 DATA_FILE = Path(__file__).parent / "data" / "recipes.json"
+app.config["SECRET_KEY"] = "dev"
+app.config["DATABASE"] = Path(app.instance_path) / "survivechef.db"
+Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+init_db_app(app)
 
 
 def load_recipes():
