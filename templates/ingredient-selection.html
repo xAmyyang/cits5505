@@ -96,6 +96,7 @@
         </p>
       </section>
 
+      <form method="post" action="{{ url_for('ingredient_selection') }}">
       <div class="row g-4 align-items-start">
 
         <!-- Main ingredient section -->
@@ -108,44 +109,55 @@
               </p>
 
               <div class="sc-search-bar mb-4">
-                <input type="text" placeholder="Search ingredients...">
-                <button class="btn btn-primary btn-sm" type="button">Search</button>
+                <input type="text" id="ingredientSearch" placeholder="Search ingredients...">
+                <button class="btn btn-primary btn-sm" type="button" id="ingredientSearchBtn">Search</button>
               </div>
 
               <div class="mb-4">
                 <h3 class="sc-section-title">Popular ingredients</h3>
                 <div class="sc-chip-group">
-                  <span class="sc-chip inactive">egg</span>
-                  <span class="sc-chip inactive">rice</span>
-                  <span class="sc-chip inactive">instant noodles</span>
-                  <span class="sc-chip inactive">soy sauce</span>
-                  <span class="sc-chip inactive">canned tuna</span>
-                  <span class="sc-chip inactive">cheese</span>
-                  <span class="sc-chip inactive">onion</span>
-                  <span class="sc-chip inactive">garlic</span>
+                  <button type="button" class="sc-chip inactive" data-ingredient="egg">egg</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="rice">rice</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="instant noodles">instant noodles</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="soy sauce">soy sauce</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="canned tuna">canned tuna</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="cheese">cheese</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="onion">onion</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="garlic">garlic</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="bread">bread</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="pasta">pasta</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="noodles">noodles</button>
                 </div>
               </div>
 
               <div class="mb-4">
                 <h3 class="sc-section-title">Vegetables</h3>
                 <div class="sc-chip-group">
-                  <span class="sc-chip inactive">tomato</span>
-                  <span class="sc-chip inactive">mushroom</span>
-                  <span class="sc-chip inactive">spinach</span>
-                  <span class="sc-chip inactive">broccoli</span>
-                  <span class="sc-chip inactive">corn</span>
-                  <span class="sc-chip inactive">potato</span>
+                  <button type="button" class="sc-chip inactive" data-ingredient="tomato">tomato</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="mushroom">mushroom</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="spinach">spinach</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="broccoli">broccoli</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="corn">corn</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="potato">potato</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="carrot">carrot</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="lettuce">lettuce</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="spring onion">spring onion</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="strawberry">strawberry</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="banana">banana</button>
                 </div>
               </div>
 
               <div class="mb-0">
                 <h3 class="sc-section-title">Proteins</h3>
                 <div class="sc-chip-group">
-                  <span class="sc-chip inactive">egg</span>
-                  <span class="sc-chip inactive">chicken</span>
-                  <span class="sc-chip inactive">tofu</span>
-                  <span class="sc-chip inactive">bacon</span>
-                  <span class="sc-chip inactive">tuna</span>
+                  <button type="button" class="sc-chip inactive" data-ingredient="egg">egg</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="chicken">chicken</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="tofu">tofu</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="bacon">bacon</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="tuna">tuna</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="milk">milk</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="yogurt">yogurt</button>
+                  <button type="button" class="sc-chip inactive" data-ingredient="granola">granola</button>
                 </div>
               </div>
             </div>
@@ -164,9 +176,10 @@
               <div class="sc-selected-box mb-3">
                 <p class="sc-empty-text">No ingredients selected yet... start clicking to build your survival meal ✨</p>
               </div>
+              <div id="selectedIngredientsInputs"></div>
 
               <div class="d-grid gap-2">
-                <a href="#" class="btn btn-primary">Find Recipes</a>
+                <button type="submit" class="btn btn-primary" id="findRecipesBtn" disabled>Find Recipes</button>
                 <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
               </div>
             </div>
@@ -180,6 +193,7 @@
           </div>
         </div>
       </div>
+      </form>
     </div>
   </main>
 
