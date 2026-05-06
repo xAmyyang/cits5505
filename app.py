@@ -61,7 +61,7 @@ def home():
 @app.route("/login", methods=("GET", "POST"))
 def login():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"email": ""}
@@ -92,7 +92,7 @@ def login():
 @app.route("/signup", methods=("GET", "POST"))
 def signup():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"name": "", "email": "", "terms": False}
