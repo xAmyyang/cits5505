@@ -55,7 +55,11 @@ def inject_auth_state():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template(
+        "index.html",
+        is_logged_in=session.get("user_id") is not None,
+        current_user_name=session.get("user_name")
+    )
 
 
 @app.route("/login", methods=("GET", "POST"))

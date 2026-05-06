@@ -63,8 +63,8 @@
       <a href="{{ url_for('profile') }}" class="sc-nav-user">👋 hi, {{ current_user_name.split(' ')[0] }}!</a>
       <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
       {% else %}
-      <button class="sc-nav-btn ghost" onclick="window.location.href='{{ url_for('login') }}'">log in</button>
-      <button class="sc-nav-btn solid" onclick="window.location.href='{{ url_for('signup') }}'">sign up free</button>
+      <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">log in</a>
+      <a href="{{ url_for('signup') }}" class="sc-nav-btn solid">sign up free</a>
       {% endif %}
     </div>
   </nav>
