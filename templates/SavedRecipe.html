@@ -28,7 +28,7 @@
 <!-- Page Header -->
  <div class="page-header sc-fade-up">
   <h1>🔖 Saved Recipes</h1>
-  <p>48 recipes saved</p>
+  <p>{{ saved_recipes|length }} recipes saved</p>
 </div>
 <!-- Main Content -->
  <div class="container py-4" style="max-width: 900px;"></div>
@@ -42,79 +42,30 @@
  
     <!-- Recipe Cards -->
      <div class="row g-3" id="recipeGrid">
- 
-    <div class="col-6 col-md-4 sc-fade-up-1" data-title="lazy egg fried rice">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#FFF4E0;">🍳</div>
+    {% set card_colors = ['#FFF4E0', '#FBEAF0', '#EEE8FF', '#EAF3DE', '#FFF0F5', '#FAEEDA'] %}
+    {% set card_icons = ['🍳', '🍜', '🥞', '🥗', '🍕', '🍌'] %}
+    {% for recipe in saved_recipes %}
+    <div class="col-6 col-md-4 sc-fade-up-1" data-title="{{ recipe.name }}">
+      <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="recipe-card">
+        <div class="recipe-card-thumb" style="background:{{ card_colors[loop.index0 % card_colors|length] }};">{{ card_icons[loop.index0 % card_icons|length] }}</div>
         <div class="recipe-card-body">
-          <div class="recipe-card-title">Lazy Egg Fried Rice</div>
-          <div class="recipe-card-meta">Easy 😌 · 4 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
+          <div class="recipe-card-title">{{ recipe.name | title }}</div>
+          <div class="recipe-card-meta">{{ recipe.difficulty | title }} 😌 · {{ recipe.ingredients|length }} ingredients</div>
+          <form method="post" action="{{ url_for('unsave_recipe', recipe_id=recipe.id) }}" onsubmit="event.stopPropagation();" onclick="event.stopPropagation()">
+            <input type="hidden" name="next" value="{{ url_for('saved_recipes') }}">
+            <button class="unsave-btn" type="submit">🔖 saved</button>
+          </form>
         </div>
       </a>
     </div>
-
-    <div class="col-6 col-md-4 sc-fade-up-2" data-title="spicy ramen upgrade">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#FBEAF0;">🍜</div>
-        <div class="recipe-card-body">
-          <div class="recipe-card-title">Spicy Ramen Upgrade</div>
-          <div class="recipe-card-meta">Easy 😌 · 6 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
-        </div>
-      </a>
-    </div>
- 
-    <div class="col-6 col-md-4 sc-fade-up-3" data-title="3-ingredient pancakes">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#EEE8FF;">🥞</div>
-        <div class="recipe-card-body">
-          <div class="recipe-card-title">3-Ingredient Pancakes</div>
-          <div class="recipe-card-meta">Easy 😌 · 3 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-4 sc-fade-up-1" data-title="tuna salad bowl">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#EAF3DE;">🥗</div>
-        <div class="recipe-card-body">
-          <div class="recipe-card-title">Tuna Salad Bowl</div>
-          <div class="recipe-card-meta">Easy 😌 · 5 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-4 sc-fade-up-2" data-title="microwave mug pizza">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#FFF0F5;">🍕</div>
-        <div class="recipe-card-body">
-          <div class="recipe-card-title">Microwave Mug Pizza</div>
-          <div class="recipe-card-meta">Medium 🙂 · 7 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
-        </div>
-      </a>
-    </div>
-
-    <div class="col-6 col-md-4 sc-fade-up-3" data-title="banana oat cookies">
-      <a href="{{ url_for('recipe_detail') }}" class="recipe-card">
-        <div class="recipe-card-thumb" style="background:#FAEEDA;">🍌</div>
-        <div class="recipe-card-body">
-          <div class="recipe-card-title">Banana Oat Cookies</div>
-          <div class="recipe-card-meta">Easy 😌 · 3 ingredients</div>
-          <button class="unsave-btn" onclick="event.preventDefault()">🔖 saved</button>
-        </div>
-      </a>
-    </div>
+    {% endfor %}
 
     </div>
     <!-- Empty state (hidden by default) -->
-     <div class="empty-state d-none" id="emptyState">
+     <div class="empty-state {% if saved_recipes %}d-none{% endif %}" id="emptyState">
     <span class="icon">🔍</span>
-    <h4>No recipes found</h4>
-    <p>Try searching something else!</p>
+    <h4>No saved recipes yet</h4>
+    <p>Save a recipe from the detail or results page and it will show up here.</p>
   </div>
  
 </div>
