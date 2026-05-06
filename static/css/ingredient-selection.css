@@ -1,3 +1,8 @@
+.sc-hero-bg {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .sc-logo-badge {
     display: inline-block;
     background: #FAEEDA;
