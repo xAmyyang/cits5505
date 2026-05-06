@@ -72,7 +72,17 @@
                   <span>{{ ingredient }}</span>
                   {% endfor %}
                 </div>
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+                <div class="results-card-actions">
+                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+                  {% if is_logged_in %}
+                  <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}">
+                    <input type="hidden" name="next" value="{{ request.full_path }}">
+                    <button type="submit" class="results-save-btn">
+                      {% if recipe.is_saved %}Saved{% else %}Save{% endif %}
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
               </div>
             </div>
           </div>
@@ -109,7 +119,17 @@
                   <span class="{% if ingredient == recipe.missing_ingredient %}missing{% endif %}">{{ ingredient }}</span>
                   {% endfor %}
                 </div>
-                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+                <div class="results-card-actions">
+                  <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+                  {% if is_logged_in %}
+                  <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}">
+                    <input type="hidden" name="next" value="{{ request.full_path }}">
+                    <button type="submit" class="results-save-btn">
+                      {% if recipe.is_saved %}Saved{% else %}Save{% endif %}
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
               </div>
             </div>
           </div>

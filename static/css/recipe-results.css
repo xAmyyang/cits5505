@@ -175,6 +175,27 @@ body.results-page {
   background: #363630;
 }
 
+.results-card-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.results-card-actions form {
+  margin: 0;
+}
+
+.results-save-btn {
+  border: 1.5px solid #f2d7ca;
+  background: white;
+  color: #5f5b55;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
 .results-empty {
   background: white;
   border: 1.5px dashed #f2d7ca;
