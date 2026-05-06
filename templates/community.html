@@ -20,8 +20,13 @@
       <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link">recipes</a>
       <a href="{{ url_for('community') }}" class="sc-nav-link active">community</a>
       <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link">saved</a>
+      {% if is_logged_in %}
       <a href="{{ url_for('profile') }}" class="sc-nav-link">profile</a>
-      <button class="sc-nav-btn ghost">log out</button>
+      <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
+      {% else %}
+      <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">log in</a>
+      <a href="{{ url_for('signup') }}" class="sc-nav-btn solid">sign up free</a>
+      {% endif %}
     </div>
   </nav>
 

@@ -57,12 +57,21 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('saved_recipes') }}">saved</a>
           </li>
+          {% if is_logged_in %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('profile') }}">profile</a>
+          </li>
+          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+            <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">log out</a>
+          </li>
+          {% else %}
           <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
             <a href="{{ url_for('login') }}" class="btn btn-light btn-sm">log in</a>
           </li>
           <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
             <a href="{{ url_for('signup') }}" class="btn btn-primary btn-sm">sign up free</a>
           </li>
+          {% endif %}
         </ul>
       </div>
     </div>
