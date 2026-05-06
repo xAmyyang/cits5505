@@ -119,12 +119,20 @@ def inject_auth_state():
 
 @app.route("/")
 def home():
+    db = get_db()
+
+    recipe_count = db.execute("SELECT COUNT(*) FROM recipes").fetchone()[0]
+    user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    ingredient_count = db.execute("SELECT COUNT(*) FROM ingredients").fetchone()[0]
+
     return render_template(
         "index.html",
         is_logged_in=session.get("user_id") is not None,
-        current_user_name=session.get("user_name")
+        current_user_name=session.get("user_name"),
+        recipe_count=recipe_count,
+        user_count=user_count,
+        ingredient_count=ingredient_count
     )
-
 
 @app.route("/login", methods=("GET", "POST"))
 def login():
@@ -211,7 +219,7 @@ def signup():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("home"))
 
 
 @app.route("/ingredients", methods=("GET", "POST"))
