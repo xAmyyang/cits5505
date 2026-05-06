@@ -59,6 +59,15 @@ def categorize_recipes(selected_ingredients):
     return exact_matches, one_away_matches
 
 
+def get_all_ingredients():
+    ingredients = {
+        ingredient
+        for recipe in load_recipes()
+        for ingredient in recipe["ingredients"]
+    }
+    return sorted(ingredients)
+
+
 def get_saved_recipe_ids(user_id):
     db = get_db()
     rows = db.execute(
@@ -224,7 +233,10 @@ def ingredient_selection():
                 )
             )
 
-    return render_template("ingredient-selection.html")
+    return render_template(
+        "ingredient-selection.html",
+        available_ingredients=get_all_ingredients(),
+    )
 
 
 @app.route("/results")
