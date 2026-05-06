@@ -26,6 +26,34 @@ def get_recipe(recipe_id):
     return next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
 
 
+def normalize_ingredients(raw_ingredients):
+    cleaned = []
+    for ingredient in raw_ingredients:
+        value = ingredient.strip().lower()
+        if value and value not in cleaned:
+            cleaned.append(value)
+    return cleaned
+
+
+def categorize_recipes(selected_ingredients):
+    selected_set = set(selected_ingredients)
+    exact_matches = []
+    one_away_matches = []
+
+    for recipe in load_recipes():
+        recipe_ingredients = set(recipe["ingredients"])
+        missing_ingredients = sorted(recipe_ingredients - selected_set)
+
+        if not missing_ingredients:
+            exact_matches.append(recipe)
+        elif len(missing_ingredients) == 1:
+            recipe_with_gap = dict(recipe)
+            recipe_with_gap["missing_ingredient"] = missing_ingredients[0]
+            one_away_matches.append(recipe_with_gap)
+
+    return exact_matches, one_away_matches
+
+
 def validate_email(email):
     return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email) is not None
 
@@ -61,7 +89,7 @@ def home():
 @app.route("/login", methods=("GET", "POST"))
 def login():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"email": ""}
@@ -92,7 +120,7 @@ def login():
 @app.route("/signup", methods=("GET", "POST"))
 def signup():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"name": "", "email": "", "terms": False}
@@ -146,9 +174,36 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/ingredients")
+@app.route("/ingredients", methods=("GET", "POST"))
 def ingredient_selection():
+    if request.method == "POST":
+        selected_ingredients = normalize_ingredients(
+            request.form.getlist("ingredients")
+        )
+        if selected_ingredients:
+            return redirect(
+                url_for(
+                    "recipe_results",
+                    ingredients=",".join(selected_ingredients),
+                )
+            )
+
     return render_template("ingredient-selection.html")
+
+
+@app.route("/results")
+def recipe_results():
+    selected_ingredients = normalize_ingredients(
+        request.args.get("ingredients", "").split(",")
+    )
+    exact_matches, one_away_matches = categorize_recipes(selected_ingredients)
+
+    return render_template(
+        "recipe-results.html",
+        selected_ingredients=selected_ingredients,
+        exact_matches=exact_matches,
+        one_away_matches=one_away_matches,
+    )
 
 
 @app.route("/community")

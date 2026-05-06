@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurviveChef | Recipe Results</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/recipe-results.css') }}">
+</head>
+<body class="results-page">
+
+  <nav class="sc-navbar">
+    <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span></a>
+    <div class="sc-nav-links">
+      <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link active">recipes</a>
+      <a href="{{ url_for('community') }}" class="sc-nav-link">community</a>
+      <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link">saved</a>
+      {% if is_logged_in %}
+      <a href="{{ url_for('profile') }}" class="sc-nav-link">profile</a>
+      <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
+      {% else %}
+      <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">log in</a>
+      <a href="{{ url_for('signup') }}" class="sc-nav-btn solid">sign up free</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <header class="results-hero">
+    <div class="container">
+      <p class="results-eyebrow">fridge check complete</p>
+      <h1>Here’s what you can make tonight 🍽️</h1>
+      <p class="results-subtitle">
+        We checked your ingredients and pulled out exact matches plus recipes that are only one ingredient away.
+      </p>
+
+      <div class="selected-ingredients">
+        {% if selected_ingredients %}
+          {% for ingredient in selected_ingredients %}
+          <span class="selected-pill">{{ ingredient }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="selected-pill empty">no ingredients selected</span>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="results-main">
+    <div class="container">
+
+      <section class="results-section">
+        <div class="section-heading">
+          <h2>Exact matches</h2>
+          <p>Recipes you can make right now with what you already picked.</p>
+        </div>
+
+        {% if exact_matches %}
+        <div class="row g-4">
+          {% for recipe in exact_matches %}
+          <div class="col-md-6 col-lg-4">
+            <div class="results-card exact">
+              <div class="results-card-top">✅</div>
+              <div class="results-card-body">
+                <h3>{{ recipe.name | title }}</h3>
+                <p>{{ recipe.time }} · {{ recipe.difficulty | title }}</p>
+                <div class="results-tags">
+                  {% for ingredient in recipe.ingredients %}
+                  <span>{{ ingredient }}</span>
+                  {% endfor %}
+                </div>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="results-empty">
+          <h3>No exact matches yet</h3>
+          <p>Try adding one or two more ingredients to unlock more recipes.</p>
+        </div>
+        {% endif %}
+      </section>
+
+      <section class="results-section">
+        <div class="section-heading">
+          <h2>1 ingredient away</h2>
+          <p>These are almost ready. You only need one more thing.</p>
+        </div>
+
+        {% if one_away_matches %}
+        <div class="row g-4">
+          {% for recipe in one_away_matches %}
+          <div class="col-md-6 col-lg-4">
+            <div class="results-card almost">
+              <div class="results-card-top">✨</div>
+              <div class="results-card-body">
+                <h3>{{ recipe.name | title }}</h3>
+                <p>{{ recipe.time }} · {{ recipe.difficulty | title }}</p>
+                <div class="missing-callout">
+                  Missing: <strong>{{ recipe.missing_ingredient }}</strong>
+                </div>
+                <div class="results-tags">
+                  {% for ingredient in recipe.ingredients %}
+                  <span class="{% if ingredient == recipe.missing_ingredient %}missing{% endif %}">{{ ingredient }}</span>
+                  {% endfor %}
+                </div>
+                <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="results-empty">
+          <h3>No near-matches yet</h3>
+          <p>Pick a few more ingredients and we’ll show the next easiest upgrades.</p>
+        </div>
+        {% endif %}
+      </section>
+
+      <div class="results-actions">
+        <a href="{{ url_for('ingredient_selection') }}" class="btn btn-secondary">Back to ingredients</a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
