@@ -21,6 +21,14 @@ Open the app in your browser at:
 http://127.0.0.1:5000/
 ```
 
+If you want to test with a separate temporary SQLite file instead of your normal local database:
+
+```bash
+SURVIVECHEF_DATABASE=/tmp/survivechef-test.db python app.py
+```
+
+That keeps your default `instance/survivechef.db` untouched.
+
 If `requirements.txt` is not being used yet, Flask can also be installed manually:
 
 ```bash

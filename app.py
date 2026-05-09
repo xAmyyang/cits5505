@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from pathlib import Path
 
@@ -11,8 +12,12 @@ from db import init_app as init_db_app
 app = Flask(__name__)
 DATA_FILE = Path(__file__).parent / "data" / "recipes.json"
 app.config["SECRET_KEY"] = "dev"
-app.config["DATABASE"] = Path(app.instance_path) / "survivechef.db"
-Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+database_override = os.environ.get("SURVIVECHEF_DATABASE")
+if database_override:
+    app.config["DATABASE"] = Path(database_override)
+else:
+    app.config["DATABASE"] = Path(app.instance_path) / "survivechef.db"
+    Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 init_db_app(app)
 
 
@@ -24,6 +29,65 @@ def load_recipes():
 def get_recipe(recipe_id):
     recipes = load_recipes()
     return next((recipe for recipe in recipes if recipe["id"] == recipe_id), None)
+
+
+def normalize_ingredients(raw_ingredients):
+    cleaned = []
+    for ingredient in raw_ingredients:
+        value = ingredient.strip().lower()
+        if value and value not in cleaned:
+            cleaned.append(value)
+    return cleaned
+
+
+def categorize_recipes(selected_ingredients):
+    selected_set = set(selected_ingredients)
+    exact_matches = []
+    one_away_matches = []
+
+    for recipe in load_recipes():
+        recipe_ingredients = set(recipe["ingredients"])
+        missing_ingredients = sorted(recipe_ingredients - selected_set)
+
+        if not missing_ingredients:
+            exact_matches.append(recipe)
+        elif len(missing_ingredients) == 1:
+            recipe_with_gap = dict(recipe)
+            recipe_with_gap["missing_ingredient"] = missing_ingredients[0]
+            one_away_matches.append(recipe_with_gap)
+
+    return exact_matches, one_away_matches
+
+
+def get_saved_recipe_ids(user_id):
+    db = get_db()
+    rows = db.execute(
+        "SELECT recipe_id FROM saved_recipes WHERE user_id = ? ORDER BY created_at DESC",
+        (user_id,),
+    ).fetchall()
+    return {row["recipe_id"] for row in rows}
+
+
+def get_saved_recipes_for_user(user_id):
+    saved_ids = []
+    db = get_db()
+    rows = db.execute(
+        "SELECT recipe_id FROM saved_recipes WHERE user_id = ? ORDER BY created_at DESC",
+        (user_id,),
+    ).fetchall()
+    saved_ids = [row["recipe_id"] for row in rows]
+
+    recipes_by_id = {recipe["id"]: recipe for recipe in load_recipes()}
+    return [recipes_by_id[recipe_id] for recipe_id in saved_ids if recipe_id in recipes_by_id]
+
+
+def annotate_saved_status(recipes, saved_ids):
+    annotated = []
+    for recipe in recipes:
+        recipe_copy = dict(recipe)
+        recipe_copy["is_saved"] = recipe["id"] in saved_ids
+        annotated.append(recipe_copy)
+    return annotated
 
 
 def validate_email(email):
@@ -73,7 +137,7 @@ def home():
 @app.route("/login", methods=("GET", "POST"))
 def login():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"email": ""}
@@ -104,7 +168,7 @@ def login():
 @app.route("/signup", methods=("GET", "POST"))
 def signup():
     if session.get("user_id"):
-        return redirect(url_for("home"))
+        return redirect(url_for("profile"))
 
     error = None
     form_data = {"name": "", "email": "", "terms": False}
@@ -158,9 +222,37 @@ def logout():
     return redirect(url_for("home"))
 
 
-@app.route("/ingredients")
+@app.route("/ingredients", methods=("GET", "POST"))
 def ingredient_selection():
+    if request.method == "POST":
+        selected_ingredients = normalize_ingredients(
+            request.form.getlist("ingredients")
+        )
+        if selected_ingredients:
+            return redirect(
+                url_for(
+                    "recipe_results",
+                    ingredients=",".join(selected_ingredients),
+                )
+            )
+
     return render_template("ingredient-selection.html")
+
+
+@app.route("/results")
+def recipe_results():
+    selected_ingredients = normalize_ingredients(
+        request.args.get("ingredients", "").split(",")
+    )
+    exact_matches, one_away_matches = categorize_recipes(selected_ingredients)
+    saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+
+    return render_template(
+        "recipe-results.html",
+        selected_ingredients=selected_ingredients,
+        exact_matches=annotate_saved_status(exact_matches, saved_ids),
+        one_away_matches=annotate_saved_status(one_away_matches, saved_ids),
+    )
 
 
 @app.route("/community")
@@ -174,7 +266,9 @@ def saved_recipes():
     redirect_response = require_login()
     if redirect_response is not None:
         return redirect_response
-    return render_template("SavedRecipe.html")
+
+    recipes = get_saved_recipes_for_user(session["user_id"])
+    return render_template("SavedRecipe.html", saved_recipes=recipes)
 
 
 @app.route("/profile")
@@ -205,7 +299,49 @@ def recipe_detail(recipe_id=None):
         if recipe is None:
             abort(404)
 
-    return render_template("recipe-detail.html", recipe=recipe)
+    saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+    recipe_data = dict(recipe)
+    recipe_data["is_saved"] = recipe["id"] in saved_ids
+
+    return render_template("recipe-detail.html", recipe=recipe_data)
+
+
+@app.route("/save/<int:recipe_id>", methods=("POST",))
+def save_recipe(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
+    db = get_db()
+    db.execute(
+        """
+        INSERT OR IGNORE INTO saved_recipes (user_id, recipe_id)
+        VALUES (?, ?)
+        """,
+        (session["user_id"], recipe_id),
+    )
+    db.commit()
+
+    return redirect(request.form.get("next") or url_for("saved_recipes"))
+
+
+@app.route("/unsave/<int:recipe_id>", methods=("POST",))
+def unsave_recipe(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    db = get_db()
+    db.execute(
+        "DELETE FROM saved_recipes WHERE user_id = ? AND recipe_id = ?",
+        (session["user_id"], recipe_id),
+    )
+    db.commit()
+
+    return redirect(request.form.get("next") or url_for("saved_recipes"))
 
 
 if __name__ == "__main__":

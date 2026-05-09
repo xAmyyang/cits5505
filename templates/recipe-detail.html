@@ -39,7 +39,16 @@
   <!-- Buttons -->
   <div class="mb-4">
     <button class="btn btn-danger">❤️ Like</button>
-    <button class="btn btn-warning">⭐ Save</button>
+    {% if is_logged_in %}
+    <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <button type="submit" class="btn btn-warning">
+        {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
+      </button>
+    </form>
+    {% else %}
+    <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
+    {% endif %}
   </div>
 
   <div class="row">
