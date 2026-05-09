@@ -56,15 +56,12 @@
   <nav class="sc-navbar">
     <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span><span class="sc-logo-badge">✨ beta</span></a>
     <div class="sc-nav-links" id="sc-nav-auth">
-      <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link">recipes</a>
-      <a href="{{ url_for('community') }}" class="sc-nav-link">community</a>
-      <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link">saved</a>
       {% if is_logged_in %}
       <a href="{{ url_for('profile') }}" class="sc-nav-user">👋 hi, {{ current_user_name.split(' ')[0] }}!</a>
       <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
       {% else %}
-      <button class="sc-nav-btn ghost" onclick="window.location.href='{{ url_for('login') }}'">log in</button>
-      <button class="sc-nav-btn solid" onclick="window.location.href='{{ url_for('signup') }}'">sign up free</button>
+      <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">log in</a>
+      <a href="{{ url_for('signup') }}" class="sc-nav-btn solid">sign up free</a>
       {% endif %}
     </div>
   </nav>
@@ -81,7 +78,7 @@
     <div class="sc-chef-shadow"></div>
 
     <h1 class="sc-h1">what's in your <span class="orange">fridge</span><span class="green">?</span></h1>
-    <p class="sc-sub">pick your ingredients, get cute recipe ideas instantly</p>
+    <p class="sc-sub">pick your ingredients, get recipe ideas instantly</p>
 
     <div class="sc-btn-row">
       <a href="{{ url_for('ingredient_selection') }}" class="sc-btn btn-find">
@@ -115,15 +112,15 @@
     </div>
     <div class="sc-stats">
       <div class="text-center">
-        <span class="sc-stat-num">1.2k</span>
+        <span class="sc-stat-num">{{ recipe_count }}</span>
         <span class="sc-stat-lbl">recipes</span>
       </div>
       <div class="text-center">
-        <span class="sc-stat-num">340</span>
+        <span class="sc-stat-num">{{ user_count }}</span>
         <span class="sc-stat-lbl">users</span>
       </div>
       <div class="text-center">
-        <span class="sc-stat-num">50+</span>
+        <span class="sc-stat-num">{{ ingredient_count }}</span>
         <span class="sc-stat-lbl">ingredients</span>
       </div>
     </div>
