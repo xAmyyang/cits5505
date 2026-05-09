@@ -1,7 +1,5 @@
-import json
 import os
 import re
-from pathlib import Path
 
 from flask import Flask, abort, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -10,7 +8,6 @@ from db import get_db
 from db import init_app as init_db_app
 
 app = Flask(__name__)
-DATA_FILE = Path(__file__).parent / "data" / "recipes.json"
 app.config["SECRET_KEY"] = "dev"
 database_override = os.environ.get("SURVIVECHEF_DATABASE")
 if database_override:
@@ -22,8 +19,43 @@ init_db_app(app)
 
 
 def load_recipes():
-    with DATA_FILE.open(encoding="utf-8") as file:
-        return json.load(file)
+    db = get_db()
+
+    recipe_rows = db.execute(
+        """
+        SELECT id, title, description, instructions, user_id, created_at
+        FROM recipes
+        ORDER BY id
+        """
+    ).fetchall()
+
+    recipes = []
+
+    for row in recipe_rows:
+        ingredient_rows = db.execute(
+            """
+            SELECT i.name
+            FROM ingredients i
+            JOIN recipe_ingredients ri ON i.id = ri.ingredient_id
+            WHERE ri.recipe_id = ?
+            ORDER BY i.name
+            """,
+            (row["id"],),
+        ).fetchall()
+
+        recipes.append({
+            "id": row["id"],
+            "name": row["title"],
+            "title": row["title"],
+            "description": row["description"],
+            "instructions": row["instructions"],
+            "ingredients": [ingredient["name"] for ingredient in ingredient_rows],
+            "time": "10 min",
+            "difficulty": "easy",
+            "user_id": row["user_id"],
+        })
+
+    return recipes
 
 
 def get_recipe(recipe_id):
