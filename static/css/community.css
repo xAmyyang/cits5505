@@ -33,6 +33,7 @@ body {
 }
 
 .share-btn {
+  display: inline-block;
   background: #ff8c69;
   color: white;
   border: none;
@@ -41,6 +42,7 @@ body {
   font-size: 14px;
   font-weight: 800;
   cursor: pointer;
+  text-decoration: none;
   transition: 0.2s ease;
 }
 
