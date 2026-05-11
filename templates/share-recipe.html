@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurviveChef | Share a Recipe</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-bg-gradient" aria-hidden="true"></div>
+  <div class="auth-dots" aria-hidden="true"></div>
+  <div class="auth-blob blob-pink" aria-hidden="true"></div>
+  <div class="auth-blob blob-green" aria-hidden="true"></div>
+  <div class="auth-blob blob-yellow" aria-hidden="true"></div>
+  <div class="auth-blob blob-purple" aria-hidden="true"></div>
+
+  <nav class="auth-nav" aria-label="site navigation">
+    <a class="auth-logo" href="{{ url_for('home') }}">survive<span>chef</span><span class="auth-logo-badge">✨ beta</span></a>
+    <span class="auth-nav-hint">sharing something helpful for the next hungry student</span>
+  </nav>
+
+  <main class="auth-wrap" id="main-content">
+    <div class="auth-card" role="main">
+      <div class="auth-card-head">
+        <span class="auth-card-emoji" aria-hidden="true">📤</span>
+        <h1 class="auth-card-title">share a recipe</h1>
+        <p class="auth-card-sub">keep it real, simple, and actually cookable</p>
+      </div>
+
+      <div class="auth-card-body">
+        <form method="post" action="{{ url_for('new_recipe') }}" novalidate>
+          <div class="auth-field">
+            <label for="recipeName">recipe name</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">🍳</span>
+              <input type="text" id="recipeName" name="name" class="auth-input" value="{{ form_data.name }}" placeholder="Lazy tuna rice bowl" required>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="recipeIngredients">ingredients</label>
+            <textarea id="recipeIngredients" name="ingredients" class="auth-input" rows="3" placeholder="egg, rice, soy sauce, spring onion" required>{{ form_data.ingredients }}</textarea>
+          </div>
+
+          <div class="auth-field">
+            <label for="recipeSteps">steps</label>
+            <textarea id="recipeSteps" name="steps" class="auth-input" rows="5" placeholder="Write one step per line" required>{{ form_data.steps }}</textarea>
+          </div>
+
+          <div class="auth-field">
+            <label for="recipeTime">estimated time</label>
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">⏱️</span>
+              <input type="text" id="recipeTime" name="time" class="auth-input" value="{{ form_data.time }}" placeholder="15 min" required>
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label for="recipeDifficulty">difficulty</label>
+            <select id="recipeDifficulty" name="difficulty" class="auth-input">
+              <option value="easy" {% if form_data.difficulty == 'easy' %}selected{% endif %}>Easy</option>
+              <option value="medium" {% if form_data.difficulty == 'medium' %}selected{% endif %}>Medium</option>
+              <option value="hard" {% if form_data.difficulty == 'hard' %}selected{% endif %}>Hard</option>
+            </select>
+          </div>
+
+          {% if error %}
+          <div class="auth-alert auth-alert-error" role="alert">
+            <span class="auth-alert-icon">⚠️</span>
+            <span>{{ error }}</span>
+          </div>
+          {% endif %}
+
+          <button type="submit" class="auth-submit-btn">
+            <span class="auth-btn-label">publish recipe</span>
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          want to keep browsing instead? <a href="{{ url_for('community') }}">back to community</a>
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

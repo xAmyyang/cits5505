@@ -93,7 +93,7 @@
       <a href="{{ url_for('saved_recipes') }}" class="sc-btn btn-saved">
         <span class="sc-btn-icon">🔖</span> saved
       </a>
-      <a href="#" class="sc-btn btn-upload">
+      <a href="{{ url_for('new_recipe') }}" class="sc-btn btn-upload">
         <span class="sc-btn-icon">📤</span> add recipe
       </a>
       <a href="{{ url_for('profile') }}" class="sc-btn btn-profile">
@@ -115,15 +115,15 @@
     </div>
     <div class="sc-stats">
       <div class="text-center">
-        <span class="sc-stat-num">1.2k</span>
+        <span class="sc-stat-num">{{ recipe_count }}</span>
         <span class="sc-stat-lbl">recipes</span>
       </div>
       <div class="text-center">
-        <span class="sc-stat-num">340</span>
+        <span class="sc-stat-num">{{ user_count }}</span>
         <span class="sc-stat-lbl">users</span>
       </div>
       <div class="text-center">
-        <span class="sc-stat-num">50+</span>
+        <span class="sc-stat-num">{{ ingredient_count }}</span>
         <span class="sc-stat-lbl">ingredients</span>
       </div>
     </div>
