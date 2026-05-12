@@ -198,7 +198,7 @@ def signup():
             db = get_db()
             db.execute(
                 """
-                INSERT INTO users (name, email, password_hash)
+                INSERT INTO users (username, email, password_hash)
                 VALUES (?, ?, ?)
                 """,
                 (name, email, generate_password_hash(password)),
@@ -208,7 +208,7 @@ def signup():
             user = find_user_by_email(email)
             session.clear()
             session["user_id"] = user["id"]
-            session["user_name"] = user["name"]
+            session["user_name"] = user["username"]
             session["user_email"] = user["email"]
             session.permanent = True
             return redirect(url_for("profile"))
