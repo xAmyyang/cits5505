@@ -1,14 +1,16 @@
+-- ============================================================
+-- Migration 001: Initial Schema
+-- Description: Create initial database tables
+-- ============================================================
+
+-- forwards (up)
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
+    name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
-    bio TEXT,
-    location TEXT,
-    avatar_url TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
 
 CREATE TABLE IF NOT EXISTS ingredients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,22 +45,9 @@ CREATE TABLE IF NOT EXISTS saved_recipes (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS ingredients (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS recipes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT,
-    instructions TEXT,
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-CREATE TABLE IF NOT EXISTS recipe_ingredients (
-    recipe_id INTEGER,
-    ingredient_id INTEGER,
-    quantity TEXT,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id),
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
-);
+-- backwards (down)
+-- DROP TABLE IF EXISTS saved_recipes;
+-- DROP TABLE IF EXISTS recipe_ingredients;
+-- DROP TABLE IF EXISTS recipes;
+-- DROP TABLE IF EXISTS ingredients;
+-- DROP TABLE IF EXISTS users;

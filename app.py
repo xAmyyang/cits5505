@@ -171,7 +171,7 @@ def home():
 @app.route("/login", methods=("GET", "POST"))
 def login():
     if session.get("user_id"):
-        return redirect(url_for("profile"))
+        return redirect(url_for("home"))
 
     error = None
     form_data = {"email": ""}
@@ -191,10 +191,10 @@ def login():
             else:
                 session.clear()
                 session["user_id"] = user["id"]
-                session["user_name"] = user["name"]
+                session["user_name"] = user["username"]
                 session["user_email"] = user["email"]
                 session.permanent = remember
-                return redirect(url_for("profile"))
+                return redirect(url_for("home"))
 
     return render_template("login.html", error=error, form_data=form_data)
 
@@ -232,7 +232,7 @@ def signup():
             db = get_db()
             db.execute(
                 """
-                INSERT INTO users (name, email, password_hash)
+                INSERT INTO users (username, email, password_hash)
                 VALUES (?, ?, ?)
                 """,
                 (name, email, generate_password_hash(password)),
@@ -242,7 +242,7 @@ def signup():
             user = find_user_by_email(email)
             session.clear()
             session["user_id"] = user["id"]
-            session["user_name"] = user["name"]
+            session["user_name"] = user["username"]
             session["user_email"] = user["email"]
             session.permanent = True
             return redirect(url_for("profile"))
@@ -307,16 +307,48 @@ def saved_recipes():
 
 @app.route("/profile")
 def profile():
-    redirect_response = require_login()
-    if redirect_response is not None:
-        return redirect_response
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
-    return render_template(
-        "profile.html",
-        user_name=session.get("user_name", "chef"),
-        user_email=session.get("user_email", ""),
-    )
+    db = get_db()
+    user = db.execute(
+        "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
+        (session["user_id"],)
+    ).fetchone()
 
+    return render_template("profile.html", user=user)
+
+@app.route("/profile/edit", methods=["GET", "POST"])
+def edit_profile():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        bio = request.form.get("bio", "").strip()
+        location = request.form.get("location", "").strip()
+        avatar_url = request.form.get("avatar_url", "").strip()
+
+        db.execute(
+            """
+            UPDATE users
+            SET username = ?, bio = ?, location = ?, avatar_url = ?
+            WHERE id = ?
+            """,
+            (username, bio, location, avatar_url, session["user_id"])
+        )
+        db.commit()
+
+        return redirect(url_for("profile"))
+
+    user = db.execute(
+        "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    return render_template("edit_profile.html", user=user)
 
 @app.route("/recipe")
 @app.route("/recipe/<int:recipe_id>")
