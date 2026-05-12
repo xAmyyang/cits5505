@@ -34,48 +34,9 @@
   <span class="sc-sparkle" style="top:14%; left:18%; width:14px; height:14px; color:#FFB3C6; animation-delay:0s;"></span>
   <span class="sc-sparkle" style="top:24%; right:18%; width:12px; height:12px; color:#B5E8C0; animation-delay:.4s;"></span>
   <span class="sc-sparkle" style="bottom:22%; left:16%; width:11px; height:11px; color:#C8B8FF; animation-delay:.8s;"></span>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <a class="navbar-brand" href="{{ url_for('home') }}">
-        survive<span>chef</span><span class="sc-logo-badge">✨ beta</span>
-      </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#scNavbar" aria-controls="scNavbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="scNavbar">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-          <li class="nav-item">
-            <a class="nav-link active" href="{{ url_for('ingredient_selection') }}">ingredients</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('community') }}">community</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('saved_recipes') }}">saved</a>
-          </li>
-          {% if is_logged_in %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('profile') }}">profile</a>
-          </li>
-          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-            <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">log out</a>
-          </li>
-          {% else %}
-          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-            <a href="{{ url_for('login') }}" class="btn btn-light btn-sm">log in</a>
-          </li>
-          <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
-            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-sm">sign up free</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
+ 
+  {% set active_page = 'recipes' %}
+  {% include 'navbar.html' %}
 
   <main class="ingredient-page-main">
     <div class="container">
