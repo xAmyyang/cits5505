@@ -429,13 +429,49 @@ def profile():
         return redirect(url_for("login"))
 
     db = get_db()
+
+    # 1. user
     user = db.execute(
         "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
         (session["user_id"],)
     ).fetchone()
-
-    return render_template("profile.html", user=user)
-
+    # 2. stats — 
+    stats = db.execute("""
+        SELECT
+            (SELECT COUNT(*)
+             FROM recipes WHERE user_id = ?)          AS recipe_count,
+            (SELECT COUNT(*)
+             FROM saved_recipes WHERE user_id = ?)    AS saved_count,
+            (SELECT COALESCE(SUM(likes), 0)
+             FROM recipes WHERE user_id = ?)          AS total_likes
+    """, (session["user_id"],) * 3).fetchone()
+    # 3. recipes — ingredient_count 
+    recipes = db.execute("""
+        SELECT r.id, r.title, r.emoji, r.difficulty,
+               r.likes, r.status,
+               COUNT(ri.ingredient_id) AS ingredient_count
+        FROM   recipes r
+        LEFT JOIN recipe_ingredients ri ON ri.recipe_id = r.id
+        WHERE  r.user_id = ?
+        GROUP  BY r.id
+        ORDER  BY r.created_at DESC
+    """, (session["user_id"],)).fetchall()
+    # 4. achievements
+    achievements = db.execute("""
+        SELECT a.icon, a.title, a.desc,
+               (ua.user_id IS NOT NULL) AS unlocked
+        FROM       achievements a
+        LEFT JOIN  user_achievements ua
+               ON  ua.achievement_id = a.id
+               AND ua.user_id = ?
+        ORDER BY   a.sort_order
+    """, (session["user_id"],)).fetchall()
+    return render_template("profile.html",
+        user=user,
+        stats=stats,
+        recipes=recipes,
+        achievements = achievements,
+    )
 @app.route("/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     if "user_id" not in session:
