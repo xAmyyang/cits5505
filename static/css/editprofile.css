@@ -1,0 +1,90 @@
+
+    .edit-card {
+      background: #fff;
+      border-radius: 20px;
+      border: 2px solid #E4F0CE;
+      padding: 2rem;
+      max-width: 560px;
+      margin: 0 auto 2rem auto;
+      box-shadow: 0 4px 24px rgba(80,140,20,0.07);
+    }
+    .edit-card .form-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: #3B6D11;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .edit-card .form-control {
+      border: 2px solid #E4F0CE;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      color: #2d2d2d;
+      padding: 10px 14px;
+      transition: border-color 0.2s;
+    }
+    .edit-card .form-control:focus {
+      border-color: #7DC52A;
+      box-shadow: 0 0 0 3px rgba(125,197,42,0.15);
+    }
+    .edit-card textarea.form-control {
+      resize: vertical;
+      min-height: 100px;
+    }
+button.save-btn,
+a.save-btn {
+  display: inline-block;
+  background: #7DC52A !important;
+  color: #fff !important;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  border: none !important;
+  border-radius: 50px !important;
+  padding: 10px 28px !important;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+
+button.save-btn:hover,
+a.save-btn:hover {
+  background: #5fa81e !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+    .cancel-btn {
+      display: inline-block;
+      background: transparent;
+      color: #3B6D11;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      border: 2px solid #C0DD97;
+      border-radius: 50px;
+      padding: 10px 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .cancel-btn:hover {
+      background: #F6FBF0;
+      color: #3B6D11;
+    }
+    .edit-page-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      color: #3B6D11;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .avatar-preview {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #C0DD97;
+      margin-bottom: 8px;
+    }
