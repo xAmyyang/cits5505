@@ -47,25 +47,7 @@ CREATE TABLE IF NOT EXISTS saved_recipes (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS ingredients (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS recipes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT,
-    instructions TEXT,
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-CREATE TABLE IF NOT EXISTS recipe_ingredients (
-    recipe_id INTEGER,
-    ingredient_id INTEGER,
-    quantity TEXT,
-    FOREIGN KEY (recipe_id) REFERENCES recipes(id),
-    FOREIGN KEY (ingredient_id) REFERENCES ingredients(id)
-);
+
 CREATE TABLE IF NOT EXISTS achievements (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     icon       TEXT NOT NULL,
