@@ -11,6 +11,8 @@ from db import init_app as init_db_app
 
 app = Flask(__name__)
 DATA_FILE = Path(__file__).parent / "data" / "recipes.json"
+USER_RECIPE_ID_OFFSET = 10000
+
 app.config["SECRET_KEY"] = "dev"
 database_override = os.environ.get("SURVIVECHEF_DATABASE")
 if database_override:
@@ -21,9 +23,47 @@ else:
 init_db_app(app)
 
 
-def load_recipes():
+def load_core_recipes():
     with DATA_FILE.open(encoding="utf-8") as file:
-        return json.load(file)
+        recipes = json.load(file)
+
+    for recipe in recipes:
+        recipe["author_name"] = "SurviveChef"
+        recipe["source"] = "core"
+
+    return recipes
+
+
+def serialize_user_recipe(row):
+    return {
+        "id": USER_RECIPE_ID_OFFSET + row["id"],
+        "name": row["name"],
+        "ingredients": json.loads(row["ingredients_json"]),
+        "steps": json.loads(row["steps_json"]),
+        "time": row["time"],
+        "difficulty": row["difficulty"],
+        "author_name": row["author_name"],
+        "source": "community",
+    }
+
+
+def load_user_recipes():
+    db = get_db()
+    rows = db.execute(
+        """
+        SELECT
+            user_recipes.*,
+            users.name AS author_name
+        FROM user_recipes
+        JOIN users ON users.id = user_recipes.user_id
+        ORDER BY user_recipes.created_at DESC
+        """
+    ).fetchall()
+    return [serialize_user_recipe(row) for row in rows]
+
+
+def load_recipes():
+    return load_core_recipes() + load_user_recipes()
 
 
 def get_recipe(recipe_id):
@@ -38,6 +78,10 @@ def normalize_ingredients(raw_ingredients):
         if value and value not in cleaned:
             cleaned.append(value)
     return cleaned
+
+
+def normalize_steps(raw_steps):
+    return [step.strip() for step in raw_steps if step.strip()]
 
 
 def categorize_recipes(selected_ingredients):
@@ -128,7 +172,14 @@ def inject_auth_state():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    db = get_db()
+    user_count = db.execute("SELECT COUNT(*) AS total FROM users").fetchone()["total"]
+    return render_template(
+        "index.html",
+        recipe_count=len(load_recipes()),
+        user_count=user_count,
+        ingredient_count=len(get_all_ingredients()),
+    )
 
 
 @app.route("/login", methods=("GET", "POST"))
@@ -257,8 +308,75 @@ def recipe_results():
 
 @app.route("/community")
 def community():
-    recipes = load_recipes()
-    return render_template("community.html", recipes=recipes)
+    return render_template("community.html", recipes=load_user_recipes())
+
+
+@app.route("/recipes/new", methods=("GET", "POST"))
+def new_recipe():
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    error = None
+    form_data = {
+        "name": "",
+        "ingredients": "",
+        "steps": "",
+        "time": "",
+        "difficulty": "easy",
+    }
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        ingredients = normalize_ingredients(request.form.get("ingredients", "").split(","))
+        steps = normalize_steps(request.form.get("steps", "").splitlines())
+        time = request.form.get("time", "").strip()
+        difficulty = request.form.get("difficulty", "easy").strip().lower()
+        form_data = {
+            "name": name,
+            "ingredients": request.form.get("ingredients", ""),
+            "steps": request.form.get("steps", ""),
+            "time": time,
+            "difficulty": difficulty,
+        }
+
+        if len(name) < 3:
+            error = "recipe name must be at least 3 characters"
+        elif len(ingredients) < 2:
+            error = "please add at least 2 ingredients"
+        elif len(steps) < 2:
+            error = "please add at least 2 cooking steps"
+        elif not time:
+            error = "please add an estimated cooking time"
+        elif difficulty not in {"easy", "medium", "hard"}:
+            error = "please choose a valid difficulty"
+        else:
+            db = get_db()
+            db.execute(
+                """
+                INSERT INTO user_recipes (
+                    user_id,
+                    name,
+                    ingredients_json,
+                    steps_json,
+                    time,
+                    difficulty
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    session["user_id"],
+                    name,
+                    json.dumps(ingredients),
+                    json.dumps(steps),
+                    time,
+                    difficulty,
+                ),
+            )
+            db.commit()
+            return redirect(url_for("community"))
+
+    return render_template("share-recipe.html", error=error, form_data=form_data)
 
 
 @app.route("/saved")
