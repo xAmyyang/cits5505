@@ -286,7 +286,7 @@ def signup():
                 INSERT INTO users (username, email, password_hash)
                 VALUES (?, ?, ?)
                 """,
-                (name, email, generate_password_hash(password)),
+                (name, email, generate_password_hash(password, method="pbkdf2:sha256")),
             )
             db.commit()
 
