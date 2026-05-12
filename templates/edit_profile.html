@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h1>Edit Profile</h1>
+
+  <form method="POST" action="{{ url_for('edit_profile') }}">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        value="{{ user['username'] }}"
+        required
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="bio" class="form-label">Bio</label>
+      <textarea
+        class="form-control"
+        id="bio"
+        name="bio"
+        rows="4"
+      >{{ user['bio'] or '' }}</textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="location" class="form-label">Location</label>
+      <input
+        type="text"
+        class="form-control"
+        id="location"
+        name="location"
+        value="{{ user['location'] or '' }}"
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="avatar_url" class="form-label">Avatar URL</label>
+      <input
+        type="text"
+        class="form-control"
+        id="avatar_url"
+        name="avatar_url"
+        value="{{ user['avatar_url'] or '' }}"
+      >
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}
