@@ -1,7 +1,6 @@
-
-from pathlib import Path
 import os
 import re
+from pathlib import Path
 
 from flask import Flask, abort, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -25,8 +24,16 @@ def load_recipes():
 
     recipe_rows = db.execute(
         """
-        SELECT id, title, description, instructions, user_id, created_at
+        SELECT
+            recipes.id,
+            recipes.title,
+            recipes.description,
+            recipes.instructions,
+            recipes.user_id,
+            recipes.created_at,
+            users.username AS author_name
         FROM recipes
+        LEFT JOIN users ON users.id = recipes.user_id
         ORDER BY id
         """
     ).fetchall()
@@ -51,10 +58,12 @@ def load_recipes():
             "title": row["title"],
             "description": row["description"],
             "instructions": row["instructions"],
+            "steps": normalize_steps((row["instructions"] or "").splitlines()) or [row["instructions"] or ""],
             "ingredients": [ingredient["name"] for ingredient in ingredient_rows],
             "time": "10 min",
             "difficulty": "easy",
             "user_id": row["user_id"],
+            "author_name": row["author_name"] or "SurviveChef",
         })
 
     return recipes
@@ -74,6 +83,10 @@ def normalize_ingredients(raw_ingredients):
     return cleaned
 
 
+def normalize_steps(raw_steps):
+    return [step.strip() for step in raw_steps if step.strip()]
+
+
 def categorize_recipes(selected_ingredients):
     selected_set = set(selected_ingredients)
     exact_matches = []
@@ -91,6 +104,44 @@ def categorize_recipes(selected_ingredients):
             one_away_matches.append(recipe_with_gap)
 
     return exact_matches, one_away_matches
+
+
+def get_all_ingredients():
+    db = get_db()
+    rows = db.execute(
+        """
+        SELECT name
+        FROM ingredients
+        ORDER BY name
+        """
+    ).fetchall()
+    return [row["name"] for row in rows]
+
+
+def load_shared_recipes():
+    return [recipe for recipe in load_recipes() if recipe["user_id"] is not None]
+
+
+def get_or_create_ingredient_ids(ingredient_names):
+    db = get_db()
+    ingredient_ids = []
+
+    for ingredient in ingredient_names:
+        row = db.execute(
+            "SELECT id FROM ingredients WHERE name = ?",
+            (ingredient,),
+        ).fetchone()
+
+        if row is None:
+            cursor = db.execute(
+                "INSERT INTO ingredients (name) VALUES (?)",
+                (ingredient,),
+            )
+            ingredient_ids.append(cursor.lastrowid)
+        else:
+            ingredient_ids.append(row["id"])
+
+    return ingredient_ids
 
 
 def get_saved_recipe_ids(user_id):
@@ -270,7 +321,10 @@ def ingredient_selection():
                 )
             )
 
-    return render_template("ingredient-selection.html")
+    return render_template(
+        "ingredient-selection.html",
+        available_ingredients=get_all_ingredients(),
+    )
 
 
 @app.route("/results")
@@ -291,8 +345,72 @@ def recipe_results():
 
 @app.route("/community")
 def community():
-    recipes = load_recipes()
-    return render_template("community.html", recipes=recipes)
+    return render_template("community.html", recipes=load_shared_recipes())
+
+
+@app.route("/recipes/new", methods=("GET", "POST"))
+def new_recipe():
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    error = None
+    form_data = {
+        "name": "",
+        "ingredients": "",
+        "steps": "",
+        "description": "",
+        "difficulty": "easy",
+    }
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        ingredients = normalize_ingredients(request.form.get("ingredients", "").split(","))
+        steps = normalize_steps(request.form.get("steps", "").splitlines())
+        description = request.form.get("description", "").strip()
+        difficulty = request.form.get("difficulty", "easy").strip().lower()
+        form_data = {
+            "name": name,
+            "ingredients": request.form.get("ingredients", ""),
+            "steps": request.form.get("steps", ""),
+            "description": description,
+            "difficulty": difficulty,
+        }
+
+        if len(name) < 3:
+            error = "recipe name must be at least 3 characters"
+        elif len(ingredients) < 2:
+            error = "please add at least 2 ingredients"
+        elif len(steps) < 2:
+            error = "please add at least 2 cooking steps"
+        elif difficulty not in {"easy", "medium", "hard"}:
+            error = "please choose a valid difficulty"
+        else:
+            db = get_db()
+            instructions = "\n".join(steps)
+            description_value = description or "Shared by the community."
+            cursor = db.execute(
+                """
+                INSERT INTO recipes (title, description, instructions, user_id)
+                VALUES (?, ?, ?, ?)
+                """,
+                (name, description_value, instructions, session["user_id"]),
+            )
+            recipe_id = cursor.lastrowid
+
+            for ingredient_id in get_or_create_ingredient_ids(ingredients):
+                db.execute(
+                    """
+                    INSERT INTO recipe_ingredients (recipe_id, ingredient_id)
+                    VALUES (?, ?)
+                    """,
+                    (recipe_id, ingredient_id),
+                )
+
+            db.commit()
+            return redirect(url_for("community"))
+
+    return render_template("share-recipe.html", error=error, form_data=form_data)
 
 
 @app.route("/saved")

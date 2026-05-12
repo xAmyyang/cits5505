@@ -26,7 +26,7 @@
       </p>
 
       <div class="community-actions">
-        <button class="share-btn">+ Share Your Recipe</button>
+        <a href="{{ url_for('new_recipe') }}" class="share-btn">+ Share Your Recipe</a>
       </div>
     </div>
   </header>
@@ -43,7 +43,7 @@
         <button class="filter-btn active" onclick="setFilter('all', event)">All</button>
         <button class="filter-btn" onclick="setFilter('easy', event)">Easy</button>
         <button class="filter-btn" onclick="setFilter('quick', event)">Quick</button>
-        <button class="filter-btn" onclick="setFilter('budget', event)">Student Budget</button>
+        <button class="filter-btn" onclick="setFilter('short', event)">5 Ingredients or Less</button>
       </div>
     </div>
   </section>
@@ -54,20 +54,21 @@
       <div class="row g-4" id="recipeGrid">
         {% set card_colors = ['#FFF4E0', '#FBEAF0', '#EEE8FF', '#FAEEDA', '#FFE8E8', '#EAF3DE'] %}
         {% set card_icons = ['🍜', '🍳', '🥪', '🍝', '🍚', '🥣'] %}
+        {% if recipes %}
         {% for recipe in recipes %}
         <div
           class="col-md-6 col-lg-4 recipe-item"
           data-title="{{ recipe.name }}"
-          data-category="{{ recipe.difficulty }} {{ recipe.time | lower }}"
+          data-category="{{ recipe.difficulty | lower }} {{ recipe.time | lower }} {% if recipe.ingredients|length <= 5 %}short{% endif %}"
         >
           <div class="community-card">
             <div class="card-top" style="background:{{ card_colors[loop.index0 % card_colors|length] }};">{{ card_icons[loop.index0 % card_icons|length] }}</div>
             <div class="card-body-custom">
-              <div class="posted-by">Shared from recipe database</div>
+              <div class="posted-by">Shared by {{ recipe.author_name }}</div>
               <h3>{{ recipe.name | title }}</h3>
               <p>
-                A simple {{ recipe.difficulty }} recipe with {{ recipe.ingredients | length }}
-                ingredients for days when you need something quick and doable.
+                A {{ recipe.difficulty }} community recipe with {{ recipe.ingredients | length }}
+                ingredients for days when you need something realistic and doable.
               </p>
               <div class="recipe-tags">
                 <span>{{ recipe.difficulty | title }}</span>
@@ -82,13 +83,14 @@
           </div>
         </div>
         {% endfor %}
+        {% endif %}
 
       </div>
 
-      <div class="empty-state d-none" id="emptyState">
+      <div class="empty-state {% if recipes %}d-none{% endif %}" id="emptyState">
         <span class="empty-icon">🍽️</span>
-        <h4>No recipes found</h4>
-        <p>Try another search or filter. The community is chaotic, but not that chaotic.</p>
+        <h4>{% if recipes %}No recipes found{% else %}No community recipes yet{% endif %}</h4>
+        <p>{% if recipes %}Try another search or filter. The community is chaotic, but not that chaotic.{% else %}Be the first person to share a recipe with the community.{% endif %}</p>
       </div>
     </div>
   </section>
@@ -99,7 +101,7 @@
       <div class="cta-box">
         <h2>Got a recipe that saved your day?</h2>
         <p>Share it with the community. It does not have to be fancy. Survival meals count too.</p>
-        <button class="share-btn">Share a Recipe</button>
+        <a href="{{ url_for('new_recipe') }}" class="share-btn">Share a Recipe</a>
       </div>
     </div>
   </section>
