@@ -25,7 +25,7 @@ def load_recipes():
     recipe_rows = db.execute(
         """
         SELECT
-            recipes.id,
+            recipes.id AS id,
             recipes.title,
             recipes.description,
             recipes.instructions,
