@@ -322,8 +322,7 @@ def ingredient_selection():
             )
 
     return render_template(
-        "ingredient-selection.html",
-        available_ingredients=get_all_ingredients(),
+        "ingredient-selection.html"
     )
 
 
