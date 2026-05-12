@@ -137,7 +137,7 @@ def home():
 @app.route("/login", methods=("GET", "POST"))
 def login():
     if session.get("user_id"):
-        return redirect(url_for("profile"))
+        return redirect(url_for("home"))
 
     error = None
     form_data = {"email": ""}
@@ -157,10 +157,10 @@ def login():
             else:
                 session.clear()
                 session["user_id"] = user["id"]
-                session["user_name"] = user["name"]
+                session["user_name"] = user["username"]
                 session["user_email"] = user["email"]
                 session.permanent = remember
-                return redirect(url_for("profile"))
+                return redirect(url_for("home"))
 
     return render_template("login.html", error=error, form_data=form_data)
 

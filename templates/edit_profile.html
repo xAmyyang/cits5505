@@ -1,56 +1,106 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SurviveChef | Edit Profile</title>
 
-{% block content %}
-<div class="container mt-5">
-  <h1>Edit Profile</h1>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_profile.css') }}">"
+</head>
+<body>
 
-  <form method="POST" action="{{ url_for('edit_profile') }}">
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input
-        type="text"
-        class="form-control"
-        id="username"
-        name="username"
-        value="{{ user['username'] }}"
-        required
-      >
-    </div>
+<!-- Navbar -->
+<nav class="sc-navbar">
+  <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span></a>
+  <div class="sc-nav-links">
+    <a href="{{ url_for('ingredient_selection') }}" class="sc-nav-link">recipes</a>
+    <a href="{{ url_for('community') }}" class="sc-nav-link">community</a>
+    <a href="{{ url_for('saved_recipes') }}" class="sc-nav-link">saved</a>
+    <a href="{{ url_for('profile') }}" class="sc-nav-link active">profile</a>
+    <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
+  </div>
+</nav>
 
-    <div class="mb-3">
-      <label for="bio" class="form-label">Bio</label>
-      <textarea
-        class="form-control"
-        id="bio"
-        name="bio"
-        rows="4"
-      >{{ user['bio'] or '' }}</textarea>
-    </div>
-
-    <div class="mb-3">
-      <label for="location" class="form-label">Location</label>
-      <input
-        type="text"
-        class="form-control"
-        id="location"
-        name="location"
-        value="{{ user['location'] or '' }}"
-      >
-    </div>
-
-    <div class="mb-3">
-      <label for="avatar_url" class="form-label">Avatar URL</label>
-      <input
-        type="text"
-        class="form-control"
-        id="avatar_url"
-        name="avatar_url"
-        value="{{ user['avatar_url'] or '' }}"
-      >
-    </div>
-
-    <button type="submit" class="btn btn-success">Save Changes</button>
-    <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
-  </form>
+<!-- Edit Profile Header -->
+<div class="profile-header">
+  <div class="text-center px-3 pb-3">
+    <div class="avatar-ring sc-fade-up">🧑‍🍳</div>
+    <div class="edit-page-title sc-fade-up-2">✏️ Edit Profile</div>
+  </div>
 </div>
-{% endblock %}
+
+<!-- Edit Form -->
+<div class="page-content">
+  <div class="edit-card sc-fade-up-1">
+    <form method="POST" action="{{ url_for('edit_profile') }}">
+
+      <div class="mb-3">
+        <label for="username" class="form-label">👤 Username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          value="{{ user['username'] }}"
+          required
+        >
+      </div>
+
+      <div class="mb-3">
+        <label for="bio" class="form-label">📝 Bio</label>
+        <textarea
+          class="form-control"
+          id="bio"
+          name="bio"
+          rows="3"
+          placeholder="Tell people a little about yourself..."
+        >{{ user['bio'] or '' }}</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="location" class="form-label">📍 Location</label>
+        <input
+          type="text"
+          class="form-control"
+          id="location"
+          name="location"
+          value="{{ user['location'] or '' }}"
+          placeholder="e.g. Perth, Australia"
+        >
+      </div>
+
+      <div class="mb-4">
+        <label for="avatar_url" class="form-label">🖼️ Avatar URL</label>
+        <input
+          type="text"
+          class="form-control"
+          id="avatar_url"
+          name="avatar_url"
+          value="{{ user['avatar_url'] or '' }}"
+          placeholder="https://..."
+        >
+        {% if user['avatar_url'] %}
+        <div class="text-center mt-2">
+          <img src="{{ user['avatar_url'] }}" alt="Current avatar" class="avatar-preview">
+          <div style="font-size:12px; color:#888; font-family:'Nunito',sans-serif;">current avatar</div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex gap-3 justify-content-center">
+        <button type="submit" class="save-btn">💾 Save Changes</button>
+        <a href="{{ url_for('profile') }}" class="cancel-btn">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
