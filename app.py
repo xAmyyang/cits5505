@@ -25,7 +25,7 @@ def load_recipes():
     recipe_rows = db.execute(
         """
         SELECT
-            recipes.id,
+            recipes.id AS id,
             recipes.title,
             recipes.description,
             recipes.instructions,
@@ -34,7 +34,7 @@ def load_recipes():
             users.username AS author_name
         FROM recipes
         LEFT JOIN users ON users.id = recipes.user_id
-        ORDER BY id
+        ORDER BY recipes.id
         """
     ).fetchall()
 
