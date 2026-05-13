@@ -286,7 +286,7 @@ def signup():
                 INSERT INTO users (username, email, password_hash)
                 VALUES (?, ?, ?)
                 """,
-                (name, email, generate_password_hash(password)),
+                (name, email, generate_password_hash(password, method="pbkdf2:sha256")),
             )
             db.commit()
 
@@ -322,8 +322,7 @@ def ingredient_selection():
             )
 
     return render_template(
-        "ingredient-selection.html",
-        available_ingredients=get_all_ingredients(),
+        "ingredient-selection.html"
     )
 
 
