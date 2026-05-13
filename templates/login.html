@@ -60,18 +60,6 @@
       <!-- Card body -->
       <div class="auth-card-body">
 
-        <!-- Social buttons -->
-        <div class="auth-social-row">
-          <button class="auth-social-btn" type="button" id="googleBtn">
-            <span aria-hidden="true">🌐</span> continue with Google
-          </button>
-          <button class="auth-social-btn" type="button" id="appleBtn">
-            <span aria-hidden="true">🍎</span> continue with Apple
-          </button>
-        </div>
-
-        <div class="auth-divider"><span>or</span></div>
-
         <!-- Login form -->
         <form id="loginForm" method="post" action="{{ url_for('login') }}" novalidate autocomplete="on">
 
@@ -163,10 +151,6 @@
 <!-- Auth logic -->
 <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script>
-  // Wire up social buttons
-  document.getElementById('googleBtn').addEventListener('click', () => Auth.socialSignIn('Google'));
-  document.getElementById('appleBtn').addEventListener('click',  () => Auth.socialSignIn('Apple'));
-
   // Wire up password toggle
   document.querySelectorAll('.auth-pw-toggle').forEach(btn => {
     btn.addEventListener('click', () => Auth.togglePassword(btn.dataset.target, btn));
