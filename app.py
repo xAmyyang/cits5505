@@ -19,6 +19,15 @@ else:
 init_db_app(app)
 
 
+def clean_difficulty(value):
+    difficulty = (value or "easy").lower()
+    if "medium" in difficulty:
+        return "medium"
+    if "hard" in difficulty:
+        return "hard"
+    return "easy"
+
+
 def load_recipes():
     db = get_db()
 
@@ -31,6 +40,7 @@ def load_recipes():
             recipes.instructions,
             recipes.user_id,
             recipes.created_at,
+            recipes.difficulty,
             users.username AS author_name
         FROM recipes
         LEFT JOIN users ON users.id = recipes.user_id
@@ -61,7 +71,7 @@ def load_recipes():
             "steps": normalize_steps((row["instructions"] or "").splitlines()) or [row["instructions"] or ""],
             "ingredients": [ingredient["name"] for ingredient in ingredient_rows],
             "time": "10 min",
-            "difficulty": "easy",
+            "difficulty": clean_difficulty(row["difficulty"]),
             "user_id": row["user_id"],
             "author_name": row["author_name"] or "SurviveChef",
         })
@@ -344,7 +354,9 @@ def recipe_results():
 
 @app.route("/community")
 def community():
-    return render_template("community.html", recipes=load_shared_recipes())
+    saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+    recipes = annotate_saved_status(load_shared_recipes(), saved_ids)
+    return render_template("community.html", recipes=recipes)
 
 
 @app.route("/recipes/new", methods=("GET", "POST"))
@@ -390,10 +402,10 @@ def new_recipe():
             description_value = description or "Shared by the community."
             cursor = db.execute(
                 """
-                INSERT INTO recipes (title, description, instructions, user_id)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO recipes (title, description, instructions, user_id, difficulty, status)
+                VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (name, description_value, instructions, session["user_id"]),
+                (name, description_value, instructions, session["user_id"], difficulty, "published"),
             )
             recipe_id = cursor.lastrowid
 
