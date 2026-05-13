@@ -60,6 +60,18 @@
       <!-- Card body -->
       <div class="auth-card-body">
 
+        <!-- Social buttons -->
+        <div class="auth-social-row">
+          <button class="auth-social-btn" type="button" id="googleBtn">
+            <span aria-hidden="true">🌐</span> continue with Google
+          </button>
+          <button class="auth-social-btn" type="button" id="appleBtn">
+            <span aria-hidden="true">🍎</span> continue with Apple
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or</span></div>
+
         <!-- Sign-up form -->
         <form id="signupForm" method="post" action="{{ url_for('signup') }}" novalidate autocomplete="on">
 
@@ -203,6 +215,10 @@
 <!-- Auth logic -->
 <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script>
+  // Wire up social buttons
+  document.getElementById('googleBtn').addEventListener('click', () => Auth.socialSignIn('Google'));
+  document.getElementById('appleBtn').addEventListener('click',  () => Auth.socialSignIn('Apple'));
+
   // Live password strength meter
   document.getElementById('signupPassword').addEventListener('input', () => {
     Auth.renderPasswordStrength(
