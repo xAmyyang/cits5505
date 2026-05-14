@@ -358,7 +358,7 @@ def recipe_results():
 @app.route("/community")
 def community():
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
-    recipes = annotate_saved_status(load_shared_recipes(), saved_ids)
+    liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
     return render_template("community.html", recipes=recipes)
 
 
