@@ -29,10 +29,44 @@ SURVIVECHEF_DATABASE=/tmp/survivechef-test.db python app.py
 
 That keeps your default `instance/survivechef.db` untouched.
 
-If `requirements.txt` is not being used yet, Flask can also be installed manually:
+---
+
+## Testing
+
+SurviveChef includes both unit tests and Selenium browser tests.
+
+Install dependencies first:
 
 ```bash
-pip install flask
+pip install -r requirements.txt
+```
+
+Run the unit test suite:
+
+```bash
+pytest tests/test_routes.py tests/test_app_flows.py
+```
+
+Run the Selenium browser suite:
+
+```bash
+pytest tests/test_selenium.py
+```
+
+Run all tests:
+
+```bash
+pytest
+```
+
+Notes:
+- Selenium tests run against a live local Flask server started by pytest.
+- Browser tests use Safari WebDriver on macOS.
+- Safari must have `Develop > Allow Remote Automation` enabled.
+- If needed, enable Safari driver support with:
+
+```bash
+safaridriver --enable
 ```
 
 ---
@@ -158,7 +192,7 @@ We aim for:
 - Flask
 
 ### Database
-- SQLite (planned for future integration)
+- SQLite
 
 ---
 
