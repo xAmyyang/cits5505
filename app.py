@@ -540,6 +540,7 @@ def recipe_detail(recipe_id=None):
 
     return render_template("recipe-detail.html", recipe=recipe_data)
 
+    db.commit()
 
 @app.route("/save/<int:recipe_id>", methods=("POST",))
 def save_recipe(recipe_id):
