@@ -49,6 +49,7 @@
       </button>
     </form>
     {% else %}
+    <a href="{{ url_for('login') }}" class="btn btn-danger">🤍 Like ({{ recipe.like_count }})</a>
     <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
     {% endif %}
   </div>
