@@ -179,7 +179,7 @@ def get_saved_recipes_for_user(user_id):
     return [recipes_by_id[recipe_id] for recipe_id in saved_ids if recipe_id in recipes_by_id]
 
 
-def annotate_saved_status(recipes, saved_ids):
+
     annotated = []
     for recipe in recipes:
         recipe_copy = dict(recipe)
