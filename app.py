@@ -74,6 +74,7 @@ def load_recipes():
             "ingredients": [ingredient["name"] for ingredient in ingredient_rows],
             "time": "10 min",
             "difficulty": clean_difficulty(row["difficulty"]),
+            "likes": row["likes"] or 0,
             "user_id": row["user_id"],
             "author_name": row["author_name"] or "SurviveChef",
         })
