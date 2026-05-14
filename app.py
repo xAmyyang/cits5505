@@ -536,6 +536,7 @@ def recipe_detail(recipe_id=None):
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
     recipe_data = dict(recipe)
     recipe_data["is_saved"] = recipe["id"] in saved_ids
+    recipe_data["is_liked"] = recipe["id"] in liked_ids
     recipe_data["like_count"] = recipe.get("likes", 0)
 
     return render_template("recipe-detail.html", recipe=recipe_data)
