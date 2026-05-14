@@ -40,6 +40,7 @@ def load_recipes():
             recipes.instructions,
             recipes.user_id,
             recipes.created_at,
+            recipes.emoji,
             recipes.difficulty,
             users.username AS author_name
         FROM recipes
