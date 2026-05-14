@@ -42,6 +42,7 @@ def load_recipes():
             recipes.created_at,
             recipes.emoji,
             recipes.difficulty,
+            recipes.status,
             users.username AS author_name
         FROM recipes
         LEFT JOIN users ON users.id = recipes.user_id
