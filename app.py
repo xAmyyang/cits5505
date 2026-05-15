@@ -215,7 +215,25 @@ def update_recipe_like_count(recipe_id):
     return like_count
 
 
+def ensure_recipe_comments_table():
+    db = get_db()
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS recipe_comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            recipe_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    """)
+    db.commit()
+
+
 def get_comments_for_recipe(recipe_id):
+    ensure_recipe_comments_table()
+
     db = get_db()
     return db.execute(
         """
@@ -637,6 +655,8 @@ def add_comment(recipe_id):
     comment_text = request.form.get("comment", "").strip()
 
     if comment_text:
+        ensure_recipe_comments_table()
+
         db = get_db()
         db.execute(
             """
