@@ -214,7 +214,23 @@ def update_recipe_like_count(recipe_id):
     )
     return like_count
 
+
+def get_comments_for_recipe(recipe_id):
+    db = get_db()
+    return db.execute(
+        """
         SELECT
+            recipe_comments.content,
+            recipe_comments.created_at,
+            users.username
+        FROM recipe_comments
+        JOIN users ON users.id = recipe_comments.user_id
+        WHERE recipe_comments.recipe_id = ?
+        ORDER BY recipe_comments.created_at DESC
+        """,
+        (recipe_id,),
+    ).fetchall()
+
 
 def annotate_recipe_status(recipes, saved_ids=None, liked_ids=None):
     saved_ids = saved_ids or set()
@@ -278,6 +294,7 @@ def home():
         user_count=user_count,
         ingredient_count=ingredient_count
     )
+
 
 @app.route("/login", methods=("GET", "POST"))
 def login():
@@ -493,12 +510,11 @@ def profile():
 
     db = get_db()
 
-    # 1. user
     user = db.execute(
         "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
         (session["user_id"],)
     ).fetchone()
-    # 2. stats — 
+
     stats = db.execute("""
         SELECT
             (SELECT COUNT(*)
@@ -510,7 +526,7 @@ def profile():
             (SELECT COUNT(*)
              FROM recipe_likes WHERE user_id = ?)     AS liked_count
     """, (session["user_id"], session["user_id"], session["user_id"], session["user_id"])).fetchone()
-    # 3. recipes — ingredient_count 
+
     recipes = db.execute("""
         SELECT r.id, r.title, r.emoji, r.difficulty,
                r.likes, r.status,
@@ -576,6 +592,7 @@ def edit_profile():
 
     return render_template("edit_profile.html", user=user)
 
+
 @app.route("/recipe")
 @app.route("/recipe/<int:recipe_id>")
 def recipe_detail(recipe_id=None):
@@ -593,6 +610,7 @@ def recipe_detail(recipe_id=None):
 
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
     liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+
     recipe_data = dict(recipe)
     recipe_data["is_saved"] = recipe["id"] in saved_ids
     recipe_data["is_liked"] = recipe["id"] in liked_ids
