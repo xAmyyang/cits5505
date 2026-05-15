@@ -24,30 +24,42 @@
 <div class="container mt-5">
 
   <!-- Recipe Title -->
-  <h1 class="recipe-title">{{ recipe.name | title }}</h1>
+  <h1 class="recipe-title">
+    {{ recipe.title or recipe.name | title }}
+  </h1>
+
   <p class="text-muted">
     Difficulty: {{ recipe.difficulty | title }} 😌
-    <span class="ms-2">Time: {{ recipe.time }}</span>
+    {% if recipe.time %}
+      <span class="ms-2">Time: {{ recipe.time }}</span>
+    {% endif %}
   </p>
+
+  {% if recipe.description %}
+  <p class="lead">
+    {{ recipe.description }}
+  </p>
+  {% endif %}
 
   <!-- Buttons -->
   <div class="mb-4">
     {% if is_logged_in %}
-    <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}" class="d-inline">
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit" class="btn btn-danger">
-        {% if recipe.is_liked %}❤️ Liked{% else %}🤍 Like{% endif %} ({{ recipe.like_count }})
-      </button>
-    </form>
-    <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit" class="btn btn-warning">
-        {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
-      </button>
-    </form>
+      <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-danger">
+          {% if recipe.is_liked %}❤️ Liked{% else %}🤍 Like{% endif %} ({{ recipe.like_count }})
+        </button>
+      </form>
+
+      <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-warning">
+          {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
+        </button>
+      </form>
     {% else %}
-    <a href="{{ url_for('login') }}" class="btn btn-danger">🤍 Like ({{ recipe.like_count }})</a>
-    <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
+      <a href="{{ url_for('login') }}" class="btn btn-danger">🤍 Like ({{ recipe.like_count }})</a>
+      <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
     {% endif %}
   </div>
 
@@ -57,11 +69,16 @@
     <div class="col-md-4">
       <div class="card p-3 mb-4">
         <h4>Ingredients</h4>
-        <ul>
-          {% for ingredient in recipe.ingredients %}
-          <li>{{ ingredient | title }}</li>
-          {% endfor %}
-        </ul>
+
+        {% if recipe.ingredients %}
+          <ul>
+            {% for ingredient in recipe.ingredients %}
+              <li>{{ ingredient | title }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">No ingredients added yet.</p>
+        {% endif %}
       </div>
     </div>
 
@@ -69,26 +86,62 @@
     <div class="col-md-8">
       <div class="card p-3 mb-4">
         <h4>Steps</h4>
-        <ol>
-          {% for step in recipe.steps %}
-          <li>{{ step }}</li>
-          {% endfor %}
-        </ol>
+
+        {% if recipe.steps %}
+          <ol>
+            {% for step in recipe.steps %}
+              <li>{{ step }}</li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <p class="text-muted">No steps added yet.</p>
+        {% endif %}
       </div>
     </div>
 
   </div>
 
   <!-- Comments -->
-  <div class="card p-4">
+  <div class="card p-4 mb-5">
     <h4>Comments 💬</h4>
 
-    <textarea class="form-control mb-3" placeholder="Write your comment..."></textarea>
-    <button class="btn btn-primary mb-3">Post Comment</button>
+    {% if is_logged_in %}
+      <form method="post" action="{{ url_for('add_comment', recipe_id=recipe.id) }}">
+        <textarea
+          name="comment"
+          class="form-control mb-3"
+          rows="3"
+          placeholder="Write your comment..."
+          required></textarea>
+
+        <button type="submit" class="btn btn-primary mb-3">
+          Post Comment
+        </button>
+      </form>
+    {% else %}
+      <p class="text-muted">
+        Please <a href="{{ url_for('login') }}">log in</a> to post a comment.
+      </p>
+    {% endif %}
 
     <div class="comment-box">
-      <p><strong>User1:</strong> Super easy recipe!</p>
-      <p><strong>User2:</strong> Lifesaver 😭</p>
+      {% if comments %}
+        {% for comment in comments %}
+          <div class="border rounded p-3 mb-2">
+            <p class="mb-1">
+              <strong>{{ comment.username }}</strong>
+            </p>
+            <p class="mb-1">
+              {{ comment.content }}
+            </p>
+            {% if comment.created_at %}
+              <small class="text-muted">{{ comment.created_at }}</small>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">No comments yet. Be the first to comment!</p>
+      {% endif %}
     </div>
   </div>
 

@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS user_achievements (
     FOREIGN KEY (user_id)        REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (achievement_id) REFERENCES achievements(id) ON DELETE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS recipe_likes (
     user_id INTEGER NOT NULL,
     recipe_id INTEGER NOT NULL,
@@ -71,4 +72,14 @@ CREATE TABLE IF NOT EXISTS recipe_likes (
     PRIMARY KEY (user_id, recipe_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS recipe_comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    recipe_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
