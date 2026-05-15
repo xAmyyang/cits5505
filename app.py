@@ -215,6 +215,41 @@ def update_recipe_like_count(recipe_id):
     return like_count
 
 
+def ensure_recipe_comments_table():
+    db = get_db()
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS recipe_comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            recipe_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    """)
+    db.commit()
+
+
+def get_comments_for_recipe(recipe_id):
+    ensure_recipe_comments_table()
+
+    db = get_db()
+    return db.execute(
+        """
+        SELECT
+            recipe_comments.content,
+            recipe_comments.created_at,
+            users.username
+        FROM recipe_comments
+        JOIN users ON users.id = recipe_comments.user_id
+        WHERE recipe_comments.recipe_id = ?
+        ORDER BY recipe_comments.created_at DESC
+        """,
+        (recipe_id,),
+    ).fetchall()
+
+
 def annotate_recipe_status(recipes, saved_ids=None, liked_ids=None):
     saved_ids = saved_ids or set()
     liked_ids = liked_ids or set()
@@ -277,6 +312,7 @@ def home():
         user_count=user_count,
         ingredient_count=ingredient_count
     )
+
 
 @app.route("/login", methods=("GET", "POST"))
 def login():
@@ -492,12 +528,11 @@ def profile():
 
     db = get_db()
 
-    # 1. user
     user = db.execute(
         "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
         (session["user_id"],)
     ).fetchone()
-    # 2. stats — 
+
     stats = db.execute("""
         SELECT
             (SELECT COUNT(*)
@@ -509,7 +544,7 @@ def profile():
             (SELECT COUNT(*)
              FROM recipe_likes WHERE user_id = ?)     AS liked_count
     """, (session["user_id"], session["user_id"], session["user_id"], session["user_id"])).fetchone()
-    # 3. recipes — ingredient_count 
+
     recipes = db.execute("""
         SELECT r.id, r.title, r.emoji, r.difficulty,
                r.likes, r.status,
@@ -520,7 +555,7 @@ def profile():
         GROUP  BY r.id
         ORDER  BY r.created_at DESC
     """, (session["user_id"],)).fetchall()
-    # 4. achievements
+
     achievements = db.execute("""
         SELECT a.icon, a.title, a.desc,
                (ua.user_id IS NOT NULL) AS unlocked
@@ -530,15 +565,19 @@ def profile():
                AND ua.user_id = ?
         ORDER BY   a.sort_order
     """, (session["user_id"],)).fetchall()
+
     liked_recipes = get_liked_recipes_for_user(session["user_id"])
 
-    return render_template("profile.html",
+    return render_template(
+        "profile.html",
         user=user,
         stats=stats,
         recipes=recipes,
         liked_recipes=liked_recipes,
         achievements=achievements,
     )
+
+
 @app.route("/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     if "user_id" not in session:
@@ -571,6 +610,7 @@ def edit_profile():
 
     return render_template("edit_profile.html", user=user)
 
+
 @app.route("/recipe")
 @app.route("/recipe/<int:recipe_id>")
 def recipe_detail(recipe_id=None):
@@ -588,12 +628,46 @@ def recipe_detail(recipe_id=None):
 
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
     liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+
     recipe_data = dict(recipe)
     recipe_data["is_saved"] = recipe["id"] in saved_ids
     recipe_data["is_liked"] = recipe["id"] in liked_ids
     recipe_data["like_count"] = recipe.get("likes", 0)
 
-    return render_template("recipe-detail.html", recipe=recipe_data)
+    comments = get_comments_for_recipe(recipe["id"])
+
+    return render_template(
+        "recipe-detail.html",
+        recipe=recipe_data,
+        comments=comments,
+    )
+
+
+@app.route("/recipe/<int:recipe_id>/comment", methods=("POST",))
+def add_comment(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
+    comment_text = request.form.get("comment", "").strip()
+
+    if comment_text:
+        ensure_recipe_comments_table()
+
+        db = get_db()
+        db.execute(
+            """
+            INSERT INTO recipe_comments (recipe_id, user_id, content)
+            VALUES (?, ?, ?)
+            """,
+            (recipe_id, session["user_id"], comment_text),
+        )
+        db.commit()
+
+    return redirect(url_for("recipe_detail", recipe_id=recipe_id))
 
 
 @app.route("/like/<int:recipe_id>", methods=("POST",))
