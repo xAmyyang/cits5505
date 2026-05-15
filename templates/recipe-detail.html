@@ -37,13 +37,14 @@
 <div class="container mt-5">
 
   <!-- Recipe Title -->
+  <h1 class="recipe-title">
     {{ recipe.title or recipe.name | title }}
   </h1>
 
   <p class="text-muted">
     Difficulty: {{ recipe.difficulty | title }} 😌
     {% if recipe.time %}
-    <span class="ms-2">Time: {{ recipe.time }}</span>
+      <span class="ms-2">Time: {{ recipe.time }}</span>
     {% endif %}
   </p>
 
@@ -56,21 +57,22 @@
   <!-- Buttons -->
   <div class="mb-4">
     {% if is_logged_in %}
-    <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}" class="d-inline">
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit" class="btn btn-danger">
-        {% if recipe.is_liked %}❤️ Liked{% else %}🤍 Like{% endif %} ({{ recipe.like_count }})
-      </button>
-    </form>
-    <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
-      <input type="hidden" name="next" value="{{ request.path }}">
-      <button type="submit" class="btn btn-warning">
-        {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
-      </button>
-    </form>
+      <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-danger">
+          {% if recipe.is_liked %}❤️ Liked{% else %}🤍 Like{% endif %} ({{ recipe.like_count }})
+        </button>
+      </form>
+
+      <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-warning">
+          {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
+        </button>
+      </form>
     {% else %}
-    <a href="{{ url_for('login') }}" class="btn btn-danger">🤍 Like ({{ recipe.like_count }})</a>
-    <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
+      <a href="{{ url_for('login') }}" class="btn btn-danger">🤍 Like ({{ recipe.like_count }})</a>
+      <a href="{{ url_for('login') }}" class="btn btn-warning">⭐ Save</a>
     {% endif %}
   </div>
 
@@ -82,11 +84,11 @@
         <h4>Ingredients</h4>
 
         {% if recipe.ingredients %}
-        <ul>
-          {% for ingredient in recipe.ingredients %}
-          <li>{{ ingredient | title }}</li>
-          {% endfor %}
-        </ul>
+          <ul>
+            {% for ingredient in recipe.ingredients %}
+              <li>{{ ingredient | title }}</li>
+            {% endfor %}
+          </ul>
         {% else %}
           <p class="text-muted">No ingredients added yet.</p>
         {% endif %}
@@ -99,11 +101,11 @@
         <h4>Steps</h4>
 
         {% if recipe.steps %}
-        <ol>
-          {% for step in recipe.steps %}
-          <li>{{ step }}</li>
-          {% endfor %}
-        </ol>
+          <ol>
+            {% for step in recipe.steps %}
+              <li>{{ step }}</li>
+            {% endfor %}
+          </ol>
         {% else %}
           <p class="text-muted">No steps added yet.</p>
         {% endif %}
