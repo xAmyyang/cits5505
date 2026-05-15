@@ -121,25 +121,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .sc-logo {
-      font-size: 22px;
-      font-weight: 900;
-      color: #D85A30;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-    .sc-logo span { color: #3B6D11; }
-    .sc-logo-badge {
-      display: inline-block;
-      background: #FAEEDA;
-      color: #854F0B;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 99px;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
+    
     .sc-nav-links {
       display: flex;
       align-items: center;
@@ -352,8 +334,14 @@
       transition: background 0.12s;
       text-decoration: none;
     }
+
     .sc-trend-chip:hover { background: #FAECE7; color: #D85A30; }
     .sc-stats { display: flex; gap: 20px; }
     .sc-stat-num { font-size: 17px; font-weight: 900; color: #D85A30; display: block; line-height: 1; }
     .sc-stat-lbl { font-size: 10px; font-weight: 700; color: #B4B2A9; }
-  
+    .sc-nav-greeting{
+      font-weight: 700;
+      color: #D85A30;
+      margin-right: 6px;
+      font-size: 0.95rem;
+    }

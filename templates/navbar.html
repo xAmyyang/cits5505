@@ -25,9 +25,15 @@
         profile
       </a>
 
-      <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">
-        log out
-      </a>
+      {% if active_page == 'home' %}
+  <span class="sc-nav-greeting">
+    👋 hi, {{ current_user_name.split(' ')[0] }}!
+  </span>
+  {% endif %}
+
+  <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">
+  log out
+  </a>
     {% else %}
       <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">
         log in
