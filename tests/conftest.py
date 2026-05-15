@@ -117,3 +117,11 @@ def app(tmp_path):
 def client(app):
     with app.test_client() as test_client:
         yield test_client
+from selenium import webdriver
+
+
+@pytest.fixture
+def driver():
+    driver = webdriver.Chrome()
+    yield driver
+    driver.quit()
