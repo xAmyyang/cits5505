@@ -4,18 +4,19 @@ from pathlib import Path
 
 from flask import Flask, abort, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from flask_wtf.csrf import CSRFProtect
 from db import get_db
 from db import init_app as init_db_app
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "dev"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key")
 database_override = os.environ.get("SURVIVECHEF_DATABASE")
 if database_override:
     app.config["DATABASE"] = Path(database_override)
 else:
     app.config["DATABASE"] = Path(app.instance_path) / "survivechef.db"
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
+csrf = CSRFProtect(app)
 init_db_app(app)
 
 

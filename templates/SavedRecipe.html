@@ -43,6 +43,7 @@
           <div class="recipe-card-title">{{ recipe.name | title }}</div>
           <div class="recipe-card-meta">{{ recipe.difficulty | title }} 😌 · {{ recipe.ingredients|length }} ingredients</div>
           <form method="post" action="{{ url_for('unsave_recipe', recipe_id=recipe.id) }}" onsubmit="event.stopPropagation();" onclick="event.stopPropagation()">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="next" value="{{ url_for('saved_recipes') }}">
             <button class="unsave-btn" type="submit">🔖 saved</button>
           </form>
