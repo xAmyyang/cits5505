@@ -44,6 +44,10 @@
         <span class="num">{{ stats["total_likes"] }}</span>
         <span class="lbl">likes got</span>
       </div>
+      <div class="stat-pill">
+        <span class="num">{{ stats["liked_count"] }}</span>
+        <span class="lbl">liked</span>
+      </div>
     </div>
  
     <a href="{{ url_for('edit_profile') }}" class="edit-btn sc-fade-up-3 mb-1">✏️ Edit Profile</a>
@@ -51,6 +55,7 @@
  <!-- Tabs -->
   <div class="sc-tabs container" style="max-width:860px;">
     <button class="sc-tab active" onclick="switchTab('my-recipes')">🍳 My Recipes</button>
+    <button class="sc-tab" onclick="switchTab('liked-recipes')">❤️ Liked Recipes</button>
     <button class="sc-tab" onclick="switchTab('achievements')">🏅 Achievements</button>
     
   </div>
@@ -82,6 +87,24 @@
  
       
  
+    </div>
+  </div>
+
+<!-- Tab: Liked Recipes -->
+  <div id="tab-liked-recipes" class="tab-panel">
+    <div class="sec-label">recipes you've liked</div>
+    <div class="d-flex flex-column gap-3">
+      {% for recipe in liked_recipes %}
+      <a href="{{ url_for('recipe_detail', recipe_id=recipe['id']) }}" class="recipe-mini sc-fade-up-{{ loop.index }}">
+        <div class="recipe-mini-emoji">{{ recipe["emoji"] or "🍽️" }}</div>
+        <div class="flex-grow-1">
+          <div class="recipe-mini-title">{{ recipe["title"] }}</div>
+          <div class="recipe-mini-meta">{{ recipe["difficulty"] }} · {{ recipe["ingredients"]|length }} ingredients · ❤️ {{ recipe["likes"] }} likes</div>
+        </div>
+      </a>
+      {% else %}
+      <div class="text-center text-muted py-4">No liked recipes yet. Like one from the recipe or community page! ❤️</div>
+      {% endfor %}
     </div>
   </div>
 <!-- Tab: Achievements -->

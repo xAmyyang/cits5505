@@ -40,7 +40,10 @@ def load_recipes():
             recipes.instructions,
             recipes.user_id,
             recipes.created_at,
+            recipes.emoji,
             recipes.difficulty,
+            recipes.likes,
+            recipes.status,
             users.username AS author_name
         FROM recipes
         LEFT JOIN users ON users.id = recipes.user_id
@@ -71,7 +74,10 @@ def load_recipes():
             "steps": normalize_steps((row["instructions"] or "").splitlines()) or [row["instructions"] or ""],
             "ingredients": [ingredient["name"] for ingredient in ingredient_rows],
             "time": "10 min",
+            "emoji": row["emoji"] or "🍽️",
             "difficulty": clean_difficulty(row["difficulty"]),
+            "likes": row["likes"] or 0,
+            "status": row["status"] or "published",
             "user_id": row["user_id"],
             "author_name": row["author_name"] or "SurviveChef",
         })
@@ -164,7 +170,6 @@ def get_saved_recipe_ids(user_id):
 
 
 def get_saved_recipes_for_user(user_id):
-    saved_ids = []
     db = get_db()
     rows = db.execute(
         "SELECT recipe_id FROM saved_recipes WHERE user_id = ? ORDER BY created_at DESC",
@@ -176,13 +181,57 @@ def get_saved_recipes_for_user(user_id):
     return [recipes_by_id[recipe_id] for recipe_id in saved_ids if recipe_id in recipes_by_id]
 
 
-def annotate_saved_status(recipes, saved_ids):
+def get_liked_recipe_ids(user_id):
+    db = get_db()
+    rows = db.execute(
+        "SELECT recipe_id FROM recipe_likes WHERE user_id = ? ORDER BY created_at DESC",
+        (user_id,),
+    ).fetchall()
+    return {row["recipe_id"] for row in rows}
+
+
+def get_liked_recipes_for_user(user_id):
+    db = get_db()
+    rows = db.execute(
+        "SELECT recipe_id FROM recipe_likes WHERE user_id = ? ORDER BY created_at DESC",
+        (user_id,),
+    ).fetchall()
+    liked_ids = [row["recipe_id"] for row in rows]
+
+    recipes_by_id = {recipe["id"]: recipe for recipe in load_recipes()}
+    return [recipes_by_id[recipe_id] for recipe_id in liked_ids if recipe_id in recipes_by_id]
+
+
+def update_recipe_like_count(recipe_id):
+    db = get_db()
+    like_count = db.execute(
+        "SELECT COUNT(*) FROM recipe_likes WHERE recipe_id = ?",
+        (recipe_id,),
+    ).fetchone()[0]
+    db.execute(
+        "UPDATE recipes SET likes = ? WHERE id = ?",
+        (like_count, recipe_id),
+    )
+    return like_count
+
+
+def annotate_recipe_status(recipes, saved_ids=None, liked_ids=None):
+    saved_ids = saved_ids or set()
+    liked_ids = liked_ids or set()
     annotated = []
+
     for recipe in recipes:
         recipe_copy = dict(recipe)
         recipe_copy["is_saved"] = recipe["id"] in saved_ids
+        recipe_copy["is_liked"] = recipe["id"] in liked_ids
+        recipe_copy["like_count"] = recipe.get("likes", 0)
         annotated.append(recipe_copy)
+
     return annotated
+
+
+def annotate_saved_status(recipes, saved_ids):
+    return annotate_recipe_status(recipes, saved_ids=saved_ids)
 
 
 def validate_email(email):
@@ -343,19 +392,21 @@ def recipe_results():
     )
     exact_matches, one_away_matches = categorize_recipes(selected_ingredients)
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+    liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
 
     return render_template(
         "recipe-results.html",
         selected_ingredients=selected_ingredients,
-        exact_matches=annotate_saved_status(exact_matches, saved_ids),
-        one_away_matches=annotate_saved_status(one_away_matches, saved_ids),
+        exact_matches=annotate_recipe_status(exact_matches, saved_ids, liked_ids),
+        one_away_matches=annotate_recipe_status(one_away_matches, saved_ids, liked_ids),
     )
 
 
 @app.route("/community")
 def community():
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
-    recipes = annotate_saved_status(load_shared_recipes(), saved_ids)
+    liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+    recipes = annotate_recipe_status(load_shared_recipes(), saved_ids, liked_ids)
     return render_template("community.html", recipes=recipes)
 
 
@@ -454,8 +505,10 @@ def profile():
             (SELECT COUNT(*)
              FROM saved_recipes WHERE user_id = ?)    AS saved_count,
             (SELECT COALESCE(SUM(likes), 0)
-             FROM recipes WHERE user_id = ?)          AS total_likes
-    """, (session["user_id"],) * 3).fetchone()
+             FROM recipes WHERE user_id = ?)          AS total_likes,
+            (SELECT COUNT(*)
+             FROM recipe_likes WHERE user_id = ?)     AS liked_count
+    """, (session["user_id"], session["user_id"], session["user_id"], session["user_id"])).fetchone()
     # 3. recipes — ingredient_count 
     recipes = db.execute("""
         SELECT r.id, r.title, r.emoji, r.difficulty,
@@ -477,11 +530,14 @@ def profile():
                AND ua.user_id = ?
         ORDER BY   a.sort_order
     """, (session["user_id"],)).fetchall()
+    liked_recipes = get_liked_recipes_for_user(session["user_id"])
+
     return render_template("profile.html",
         user=user,
         stats=stats,
         recipes=recipes,
-        achievements = achievements,
+        liked_recipes=liked_recipes,
+        achievements=achievements,
     )
 @app.route("/profile/edit", methods=["GET", "POST"])
 def edit_profile():
@@ -531,10 +587,56 @@ def recipe_detail(recipe_id=None):
             abort(404)
 
     saved_ids = get_saved_recipe_ids(session["user_id"]) if session.get("user_id") else set()
+    liked_ids = get_liked_recipe_ids(session["user_id"]) if session.get("user_id") else set()
     recipe_data = dict(recipe)
     recipe_data["is_saved"] = recipe["id"] in saved_ids
+    recipe_data["is_liked"] = recipe["id"] in liked_ids
+    recipe_data["like_count"] = recipe.get("likes", 0)
 
     return render_template("recipe-detail.html", recipe=recipe_data)
+
+
+@app.route("/like/<int:recipe_id>", methods=("POST",))
+def like_recipe(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
+    db = get_db()
+    db.execute(
+        """
+        INSERT OR IGNORE INTO recipe_likes (user_id, recipe_id)
+        VALUES (?, ?)
+        """,
+        (session["user_id"], recipe_id),
+    )
+    update_recipe_like_count(recipe_id)
+    db.commit()
+
+    return redirect(request.form.get("next") or url_for("recipe_detail", recipe_id=recipe_id))
+
+
+@app.route("/unlike/<int:recipe_id>", methods=("POST",))
+def unlike_recipe(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
+    db = get_db()
+    db.execute(
+        "DELETE FROM recipe_likes WHERE user_id = ? AND recipe_id = ?",
+        (session["user_id"], recipe_id),
+    )
+    update_recipe_like_count(recipe_id)
+    db.commit()
+
+    return redirect(request.form.get("next") or url_for("recipe_detail", recipe_id=recipe_id))
 
 
 @app.route("/save/<int:recipe_id>", methods=("POST",))

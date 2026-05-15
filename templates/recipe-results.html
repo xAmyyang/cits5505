@@ -62,12 +62,20 @@
                 <div class="results-card-actions">
                   <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
                   {% if is_logged_in %}
+                  <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}">
+                    <input type="hidden" name="next" value="{{ request.full_path }}">
+                    <button type="submit" class="results-save-btn">
+                      {% if recipe.is_liked %}Liked{% else %}Like{% endif %} · {{ recipe.like_count }}
+                    </button>
+                  </form>
                   <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}">
                     <input type="hidden" name="next" value="{{ request.full_path }}">
                     <button type="submit" class="results-save-btn">
                       {% if recipe.is_saved %}Saved{% else %}Save{% endif %}
                     </button>
                   </form>
+                  {% else %}
+                  <a href="{{ url_for('login') }}" class="results-save-btn">Like · {{ recipe.like_count }}</a>
                   {% endif %}
                 </div>
               </div>
@@ -109,12 +117,20 @@
                 <div class="results-card-actions">
                   <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="results-link">View recipe</a>
                   {% if is_logged_in %}
+                  <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}">
+                    <input type="hidden" name="next" value="{{ request.full_path }}">
+                    <button type="submit" class="results-save-btn">
+                      {% if recipe.is_liked %}Liked{% else %}Like{% endif %} · {{ recipe.like_count }}
+                    </button>
+                  </form>
                   <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}">
                     <input type="hidden" name="next" value="{{ request.full_path }}">
                     <button type="submit" class="results-save-btn">
                       {% if recipe.is_saved %}Saved{% else %}Save{% endif %}
                     </button>
                   </form>
+                  {% else %}
+                  <a href="{{ url_for('login') }}" class="results-save-btn">Like · {{ recipe.like_count }}</a>
                   {% endif %}
                 </div>
               </div>
