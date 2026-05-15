@@ -61,7 +61,7 @@ pytest
 
 Notes:
 - Selenium tests run against a live local Flask server started by pytest.
-- Browser tests use Safari WebDriver on macOS.
+- Browser tests use Chrome,If wants to run on Safari,Please change the conftest.py
 - Safari must have `Develop > Allow Remote Automation` enabled.
 - If needed, enable Safari driver support with:
 
