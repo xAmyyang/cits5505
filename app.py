@@ -521,7 +521,7 @@ def profile():
         GROUP  BY r.id
         ORDER  BY r.created_at DESC
     """, (session["user_id"],)).fetchall()
-    # 4. achievements
+
     achievements = db.execute("""
         SELECT a.icon, a.title, a.desc,
                (ua.user_id IS NOT NULL) AS unlocked
@@ -531,15 +531,19 @@ def profile():
                AND ua.user_id = ?
         ORDER BY   a.sort_order
     """, (session["user_id"],)).fetchall()
+
     liked_recipes = get_liked_recipes_for_user(session["user_id"])
 
-    return render_template("profile.html",
+    return render_template(
+        "profile.html",
         user=user,
         stats=stats,
         recipes=recipes,
         liked_recipes=liked_recipes,
         achievements=achievements,
     )
+
+
 @app.route("/profile/edit", methods=["GET", "POST"])
 def edit_profile():
     if "user_id" not in session:
