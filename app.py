@@ -214,6 +214,7 @@ def update_recipe_like_count(recipe_id):
     )
     return like_count
 
+        SELECT
 
 def annotate_recipe_status(recipes, saved_ids=None, liked_ids=None):
     saved_ids = saved_ids or set()
