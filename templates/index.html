@@ -104,11 +104,13 @@
   <div class="sc-bottom">
     <div class="sc-trending">
       <span class="sc-trend-label">🔥 trending</span>
-      <a href="#" class="sc-trend-chip">egg</a>
-      <a href="#" class="sc-trend-chip">instant noodles</a>
-      <a href="#" class="sc-trend-chip">rice</a>
-      <a href="#" class="sc-trend-chip">soy sauce</a>
-      <a href="#" class="sc-trend-chip">canned tuna</a>
+      {% for recipe in trending_recipes %}
+    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="sc-trend-chip">
+    {{ recipe.title }}
+    </a>
+    {% else %}
+    <span class="sc-trend-chip">no recipes yet</span>
+    {% endfor %}
     </div>
     <div class="sc-stats">
       <div class="text-center">

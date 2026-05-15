@@ -265,17 +265,26 @@ def inject_auth_state():
 def home():
     db = get_db()
 
+    trending_recipes = db.execute("""
+    SELECT id, title, emoji, likes
+    FROM recipes
+    WHERE status = 'published' OR user_id IS NULL
+    ORDER BY likes DESC, created_at DESC
+    LIMIT 5
+""").fetchall()
+
     recipe_count = db.execute("SELECT COUNT(*) FROM recipes").fetchone()[0]
     user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
     ingredient_count = db.execute("SELECT COUNT(*) FROM ingredients").fetchone()[0]
 
     return render_template(
         "index.html",
-        is_logged_in=session.get("user_id") is not None,
-        current_user_name=session.get("user_name"),
+        trending_recipes=trending_recipes,
         recipe_count=recipe_count,
         user_count=user_count,
-        ingredient_count=ingredient_count
+        ingredient_count=ingredient_count,
+        is_logged_in=session.get("user_id") is not None,
+        current_user_name=session.get("user_name", "")
     )
 
 @app.route("/login", methods=("GET", "POST"))
