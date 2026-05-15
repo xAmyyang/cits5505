@@ -90,11 +90,16 @@
     <div class="col-md-8">
       <div class="card p-3 mb-4">
         <h4>Steps</h4>
+
+        {% if recipe.steps %}
         <ol>
           {% for step in recipe.steps %}
           <li>{{ step }}</li>
           {% endfor %}
         </ol>
+        {% else %}
+          <p class="text-muted">No steps added yet.</p>
+        {% endif %}
       </div>
     </div>
 
