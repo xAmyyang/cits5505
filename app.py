@@ -598,7 +598,38 @@ def recipe_detail(recipe_id=None):
     recipe_data["is_liked"] = recipe["id"] in liked_ids
     recipe_data["like_count"] = recipe.get("likes", 0)
 
-    return render_template("recipe-detail.html", recipe=recipe_data)
+    comments = get_comments_for_recipe(recipe["id"])
+
+    return render_template(
+        "recipe-detail.html",
+        recipe=recipe_data,
+        comments=comments,
+    )
+
+
+@app.route("/recipe/<int:recipe_id>/comment", methods=("POST",))
+def add_comment(recipe_id):
+    redirect_response = require_login()
+    if redirect_response is not None:
+        return redirect_response
+
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
+    comment_text = request.form.get("comment", "").strip()
+
+    if comment_text:
+        db = get_db()
+        db.execute(
+            """
+            INSERT INTO recipe_comments (recipe_id, user_id, content)
+            VALUES (?, ?, ?)
+            """,
+            (recipe_id, session["user_id"], comment_text),
+        )
+        db.commit()
+
+    return redirect(url_for("recipe_detail", recipe_id=recipe_id))
 
 
 @app.route("/like/<int:recipe_id>", methods=("POST",))
