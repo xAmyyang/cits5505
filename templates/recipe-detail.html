@@ -35,11 +35,21 @@
 <div class="container mt-5">
 
   <!-- Recipe Title -->
-  <h1 class="recipe-title">{{ recipe.name | title }}</h1>
+    {{ recipe.title or recipe.name | title }}
+  </h1>
+
   <p class="text-muted">
     Difficulty: {{ recipe.difficulty | title }} 😌
+    {% if recipe.time %}
     <span class="ms-2">Time: {{ recipe.time }}</span>
+    {% endif %}
   </p>
+
+  {% if recipe.description %}
+  <p class="lead">
+    {{ recipe.description }}
+  </p>
+  {% endif %}
 
   <!-- Buttons -->
   <div class="mb-4">
