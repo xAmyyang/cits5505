@@ -106,11 +106,27 @@
   </div>
 
   <!-- Comments -->
-  <div class="card p-4">
+  <div class="card p-4 mb-5">
     <h4>Comments 💬</h4>
 
-    <textarea class="form-control mb-3" placeholder="Write your comment..."></textarea>
-    <button class="btn btn-primary mb-3">Post Comment</button>
+    {% if is_logged_in %}
+      <form method="post" action="{{ url_for('add_comment', recipe_id=recipe.id) }}">
+        <textarea
+          name="comment"
+          class="form-control mb-3"
+          rows="3"
+          placeholder="Write your comment..."
+          required></textarea>
+
+        <button type="submit" class="btn btn-primary mb-3">
+          Post Comment
+        </button>
+      </form>
+    {% else %}
+      <p class="text-muted">
+        Please <a href="{{ url_for('login') }}">log in</a> to post a comment.
+      </p>
+    {% endif %}
 
     <div class="comment-box">
       <p><strong>User1:</strong> Super easy recipe!</p>
