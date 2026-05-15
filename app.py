@@ -7,6 +7,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_wtf.csrf import CSRFProtect
 from db import get_db
 from db import init_app as init_db_app
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key")
