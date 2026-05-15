@@ -52,19 +52,12 @@
   <span class="sparkle" style="top:38%;right:6%;width:16px;height:16px;--col:#FFB3C6;--dur:3s;--delay:1.1s;"></span>
 
   <!-- ── Navbar ── -->
-  <!-- ── Navbar ── -->
-  <nav class="sc-navbar">
-    <a class="sc-logo" href="{{ url_for('home') }}">survive<span>chef</span><span class="sc-logo-badge">✨ beta</span></a>
-    <div class="sc-nav-links" id="sc-nav-auth">
-      {% if is_logged_in %}
-      <a href="{{ url_for('profile') }}" class="sc-nav-user">👋 hi, {{ current_user_name.split(' ')[0] }}!</a>
-      <a href="{{ url_for('logout') }}" class="sc-nav-btn ghost">log out</a>
-      {% else %}
-      <a href="{{ url_for('login') }}" class="sc-nav-btn ghost">log in</a>
-      <a href="{{ url_for('signup') }}" class="sc-nav-btn solid">sign up free</a>
-      {% endif %}
-    </div>
-  </nav>
+  {% include "navbar.html" %}
+  {% if is_logged_in %}
+<div class="homepage-greeting">
+  👋 hi, {{ current_user_name.split(' ')[0] }}!
+</div>
+{% endif %}
 
   <!-- ── Hero ── -->
   <div class="sc-hero">

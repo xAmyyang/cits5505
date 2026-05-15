@@ -352,8 +352,14 @@
       transition: background 0.12s;
       text-decoration: none;
     }
+
     .sc-trend-chip:hover { background: #FAECE7; color: #D85A30; }
     .sc-stats { display: flex; gap: 20px; }
     .sc-stat-num { font-size: 17px; font-weight: 900; color: #D85A30; display: block; line-height: 1; }
     .sc-stat-lbl { font-size: 10px; font-weight: 700; color: #B4B2A9; }
-  
+    .sc-nav-greeting{
+      font-weight: 700;
+      color: #D85A30;
+      margin-right: 6px;
+      font-size: 0.95rem;
+    }

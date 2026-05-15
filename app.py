@@ -279,6 +279,7 @@ def home():
 
     return render_template(
         "index.html",
+        active_page="home",
         trending_recipes=trending_recipes,
         recipe_count=recipe_count,
         user_count=user_count,
