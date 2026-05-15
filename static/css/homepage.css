@@ -121,25 +121,7 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .sc-logo {
-      font-size: 22px;
-      font-weight: 900;
-      color: #D85A30;
-      letter-spacing: -0.5px;
-      text-decoration: none;
-    }
-    .sc-logo span { color: #3B6D11; }
-    .sc-logo-badge {
-      display: inline-block;
-      background: #FAEEDA;
-      color: #854F0B;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 99px;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
+    
     .sc-nav-links {
       display: flex;
       align-items: center;

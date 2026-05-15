@@ -3,17 +3,6 @@
     overflow-y: auto;
 }
 
-.sc-logo-badge {
-    display: inline-block;
-    background: #FAEEDA;
-    color: #854F0B;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 999px;
-    margin-left: 6px;
-    vertical-align: middle;
-}
 
 .ingredient-page-main {
     position: relative;
