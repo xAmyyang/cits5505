@@ -78,11 +78,16 @@
     <div class="col-md-4">
       <div class="card p-3 mb-4">
         <h4>Ingredients</h4>
+
+        {% if recipe.ingredients %}
         <ul>
           {% for ingredient in recipe.ingredients %}
           <li>{{ ingredient | title }}</li>
           {% endfor %}
         </ul>
+        {% else %}
+          <p class="text-muted">No ingredients added yet.</p>
+        {% endif %}
       </div>
     </div>
 
