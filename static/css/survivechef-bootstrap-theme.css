@@ -517,6 +517,18 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   letter-spacing: -0.5px;
 }
 .sc-logo span { color: var(--sc-green); }
+
+.sc-logo-badge {
+  display: inline-block;
+  background: #FAEEDA;
+  color: #854F0B;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
  
 .sc-nav-links {
   display: flex;
