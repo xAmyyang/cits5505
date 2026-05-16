@@ -60,8 +60,9 @@
       <!-- Card body -->
       <div class="auth-card-body">
 
-        <!-- Sign-up form -->
-        <form id="signupForm" method="post" action="{{ url_for('signup') }}" novalidate autocomplete="on">
+    <!-- Sign-up form -->
+      <form id="signupForm" method="post" action="{{ url_for('signup') }}" novalidate autocomplete="on">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
           <!-- Name -->
           <div class="auth-field">

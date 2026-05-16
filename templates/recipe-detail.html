@@ -45,6 +45,7 @@
   <div class="mb-4">
     {% if is_logged_in %}
       <form method="post" action="{{ url_for('unlike_recipe' if recipe.is_liked else 'like_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="next" value="{{ request.path }}">
         <button type="submit" class="btn btn-danger">
           {% if recipe.is_liked %}❤️ Liked{% else %}🤍 Like{% endif %} ({{ recipe.like_count }})
@@ -52,6 +53,7 @@
       </form>
 
       <form method="post" action="{{ url_for('unsave_recipe' if recipe.is_saved else 'save_recipe', recipe_id=recipe.id) }}" class="d-inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="next" value="{{ request.path }}">
         <button type="submit" class="btn btn-warning">
           {% if recipe.is_saved %}🔖 Saved{% else %}⭐ Save{% endif %}
@@ -107,6 +109,7 @@
 
     {% if is_logged_in %}
       <form method="post" action="{{ url_for('add_comment', recipe_id=recipe.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <textarea
           name="comment"
           class="form-control mb-3"

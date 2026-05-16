@@ -35,6 +35,7 @@
 
       <div class="auth-card-body">
         <form method="post" action="{{ url_for('new_recipe') }}" novalidate>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <div class="auth-field">
             <label for="recipeName">recipe name</label>
             <div class="auth-input-wrap">

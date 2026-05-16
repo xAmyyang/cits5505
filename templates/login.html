@@ -62,6 +62,7 @@
 
         <!-- Login form -->
         <form id="loginForm" method="post" action="{{ url_for('login') }}" novalidate autocomplete="on">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
           <!-- Email -->
           <div class="auth-field">

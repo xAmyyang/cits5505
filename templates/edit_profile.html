@@ -38,6 +38,7 @@
 <div class="page-content">
   <div class="edit-card sc-fade-up-1">
     <form method="POST" action="{{ url_for('edit_profile') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="mb-3">
         <label for="username" class="form-label">👤 Username</label>
