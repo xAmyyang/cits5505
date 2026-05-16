@@ -31,6 +31,32 @@
   margin-bottom: 4px;
 }
 
+.profile-email {
+  font-size: 14px;
+  font-weight: 700;
+  color: #9A968D;
+  margin-bottom: 10px;
+}
+
+.profile-level {
+  display: inline-block;
+  background: #FFF1D9;
+  color: #B56A1E;
+  border: 1.5px solid #FFD79A;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.profile-location {
+  font-size: 14px;
+  font-weight: 700;
+  color: #AAA59A;
+  margin-bottom: 18px;
+}
+
 .profile-handle {
   font-size: 13px;
   font-weight: 700;

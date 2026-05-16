@@ -21,11 +21,21 @@
   <div class="text-center px-3">
     
     <div class="avatar-ring sc-fade-up">🧑‍🍳</div>
-    <div>{{ user["username"] }}</div>
-    <div>{{ user["email"] }}</div>
+    <div class="profile-name">
+      {{ user["username"] }}
+    </div>
 
-    <div>{{ user["bio"] or "No bio yet." }}</div>
-    <div>{{ user["location"] or "No location added." }}</div>
+    <div class="profile-email">
+      {{ user["email"] }}
+    </div>
+
+    <div class="profile-level">
+      🍳 {{ user["bio"] or "level 1 survival chef" }}
+    </div>
+
+    <div class="profile-location">
+      📍 {{ user["location"] or "No location added." }}
+    </div>
 
 {% if user["avatar_url"] %}
   <img src="{{ user['avatar_url'] }}" alt="Profile avatar">
