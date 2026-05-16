@@ -55,7 +55,7 @@
   {% include "navbar.html" %}
   {% if is_logged_in %}
 <div class="homepage-greeting">
-  👋 hi, {{ current_user_name.split(' ')[0] }}!
+  👋 Hi, {{ current_user_name.split(' ')[0] }}!
 </div>
 {% endif %}
 
@@ -64,14 +64,14 @@
 
     <div class="sc-eyebrow">
       <span class="pulse-dot"></span>
-      made for students who can cook (kinda)
+      made for tired humans with random ingredients
     </div>
 
     <span class="sc-chef-emoji">🧑‍🍳</span>
     <div class="sc-chef-shadow"></div>
 
     <h1 class="sc-h1">what's in your <span class="orange">fridge</span><span class="green">?</span></h1>
-    <p class="sc-sub">pick your ingredients, get recipe ideas instantly</p>
+    <p class="sc-sub">Chaotic fridge. Cute recipes. Problem solved.</p>
 
     <div class="sc-btn-row">
       <a href="{{ url_for('ingredient_selection') }}" class="sc-btn btn-find">
