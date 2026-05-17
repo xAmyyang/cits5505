@@ -149,3 +149,69 @@ def test_save_recipe_persists_for_logged_in_user(client, app):
         ).fetchall()
 
     assert [row["recipe_id"] for row in saved] == [1]
+
+
+def test_unsave_missing_recipe_returns_404_for_logged_in_user(client):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post("/unsave/999", follow_redirects=False)
+
+    assert response.status_code == 404
+
+
+def test_edit_profile_updates_session_name(client, app):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post(
+        "/profile/edit",
+        data={
+            "username": "Night Cook",
+            "bio": "Still surviving.",
+            "location": "Perth",
+            "avatar_url": "https://example.com/avatar.png",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/profile")
+
+    with client.session_transaction() as session:
+        assert session["user_name"] == "Night Cook"
+
+    with app.app_context():
+        user = get_db().execute(
+            "SELECT username, bio, avatar_url FROM users WHERE id = ?",
+            (1,),
+        ).fetchone()
+
+    assert user["username"] == "Night Cook"
+    assert user["bio"] == "Still surviving."
+    assert user["avatar_url"] == "https://example.com/avatar.png"
+
+
+def test_edit_profile_rejects_short_username(client):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post(
+        "/profile/edit",
+        data={
+            "username": "A",
+            "bio": "Short name attempt.",
+            "location": "Perth",
+            "avatar_url": "",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+    assert b"username must be at least 2 characters" in response.data

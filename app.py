@@ -13,6 +13,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key")
+app.config["DEBUG"] = os.environ.get("FLASK_DEBUG", "").lower() in {"1", "true", "yes", "on"}
 database_override = os.environ.get("SURVIVECHEF_DATABASE")
 if database_override:
     app.config["DATABASE"] = Path(database_override)
@@ -219,25 +220,7 @@ def update_recipe_like_count(recipe_id):
     return like_count
 
 
-def ensure_recipe_comments_table():
-    db = get_db()
-    db.execute("""
-        CREATE TABLE IF NOT EXISTS recipe_comments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            recipe_id INTEGER NOT NULL,
-            user_id INTEGER NOT NULL,
-            content TEXT NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        )
-    """)
-    db.commit()
-
-
 def get_comments_for_recipe(recipe_id):
-    ensure_recipe_comments_table()
-
     db = get_db()
     return db.execute(
         """
@@ -605,6 +588,17 @@ def edit_profile():
         location = request.form.get("location", "").strip()
         avatar_url = request.form.get("avatar_url", "").strip()
 
+        if len(username) < 2:
+            user = db.execute(
+                "SELECT id, username, email, bio, location, avatar_url FROM users WHERE id = ?",
+                (session["user_id"],)
+            ).fetchone()
+            return render_template(
+                "edit_profile.html",
+                user=user,
+                error="username must be at least 2 characters",
+            )
+
         db.execute(
             """
             UPDATE users
@@ -614,6 +608,7 @@ def edit_profile():
             (username, bio, location, avatar_url, session["user_id"])
         )
         db.commit()
+        session["user_name"] = username
 
         return redirect(url_for("profile"))
 
@@ -622,7 +617,7 @@ def edit_profile():
         (session["user_id"],)
     ).fetchone()
 
-    return render_template("edit_profile.html", user=user)
+    return render_template("edit_profile.html", user=user, error=None)
 
 
 @app.route("/recipe")
@@ -669,8 +664,6 @@ def add_comment(recipe_id):
     comment_text = request.form.get("comment", "").strip()
 
     if comment_text:
-        ensure_recipe_comments_table()
-
         db = get_db()
         db.execute(
             """
@@ -755,6 +748,9 @@ def unsave_recipe(recipe_id):
     if redirect_response is not None:
         return redirect_response
 
+    if get_recipe(recipe_id) is None:
+        abort(404)
+
     db = get_db()
     db.execute(
         "DELETE FROM saved_recipes WHERE user_id = ? AND recipe_id = ?",
@@ -766,4 +762,4 @@ def unsave_recipe(recipe_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=app.config["DEBUG"])
