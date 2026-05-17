@@ -40,23 +40,51 @@
             <label for="recipeName">recipe name</label>
             <div class="auth-input-wrap">
               <span class="auth-input-icon" aria-hidden="true">🍳</span>
-              <input type="text" id="recipeName" name="name" class="auth-input" value="{{ form_data.name }}" placeholder="Lazy tuna rice bowl" required>
+              <input type="text" id="recipeName" name="name" class="auth-input" value="{{ form_data.name }}" placeholder="Lazy tuna rice bowl" maxlength="80" required>
             </div>
+            <small class="text-muted d-block mt-2">Keep it short and recognisable. 3 to 80 characters works best.</small>
+            {% if field_errors.name %}
+            <div class="auth-alert auth-alert-error mt-2" role="alert">
+              <span class="auth-alert-icon">⚠️</span>
+              <span>{{ field_errors.name }}</span>
+            </div>
+            {% endif %}
           </div>
 
           <div class="auth-field">
             <label for="recipeDescription">short description</label>
-            <textarea id="recipeDescription" name="description" class="auth-input" rows="3" placeholder="Why this recipe is useful, quick, or reliable">{{ form_data.description }}</textarea>
+            <textarea id="recipeDescription" name="description" class="auth-input" rows="3" maxlength="280" placeholder="Why this recipe is useful, quick, or reliable">{{ form_data.description }}</textarea>
+            <small class="text-muted d-block mt-2">Optional. A quick one-liner helps people decide faster.</small>
+            {% if field_errors.description %}
+            <div class="auth-alert auth-alert-error mt-2" role="alert">
+              <span class="auth-alert-icon">⚠️</span>
+              <span>{{ field_errors.description }}</span>
+            </div>
+            {% endif %}
           </div>
 
           <div class="auth-field">
             <label for="recipeIngredients">ingredients</label>
             <textarea id="recipeIngredients" name="ingredients" class="auth-input" rows="3" placeholder="Separate ingredients with commas (ex. egg, rice, soy sauce)" required>{{ form_data.ingredients }}</textarea>
+            <small class="text-muted d-block mt-2">Use commas between ingredients. Add at least 2 unique items.</small>
+            {% if field_errors.ingredients %}
+            <div class="auth-alert auth-alert-error mt-2" role="alert">
+              <span class="auth-alert-icon">⚠️</span>
+              <span>{{ field_errors.ingredients }}</span>
+            </div>
+            {% endif %}
           </div>
 
           <div class="auth-field">
             <label for="recipeSteps">steps</label>
             <textarea id="recipeSteps" name="steps" class="auth-input" rows="5" placeholder="Write one step per line" required>{{ form_data.steps }}</textarea>
+            <small class="text-muted d-block mt-2">Write one step per line. At least 2 steps keeps the recipe usable.</small>
+            {% if field_errors.steps %}
+            <div class="auth-alert auth-alert-error mt-2" role="alert">
+              <span class="auth-alert-icon">⚠️</span>
+              <span>{{ field_errors.steps }}</span>
+            </div>
+            {% endif %}
           </div>
 
           <div class="auth-field">
@@ -66,6 +94,12 @@
               <option value="medium" {% if form_data.difficulty == 'medium' %}selected{% endif %}>Medium</option>
               <option value="hard" {% if form_data.difficulty == 'hard' %}selected{% endif %}>Hard</option>
             </select>
+            {% if field_errors.difficulty %}
+            <div class="auth-alert auth-alert-error mt-2" role="alert">
+              <span class="auth-alert-icon">⚠️</span>
+              <span>{{ field_errors.difficulty }}</span>
+            </div>
+            {% endif %}
           </div>
 
           {% if error %}

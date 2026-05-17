@@ -108,6 +108,53 @@ def normalize_steps(raw_steps):
     return [step.strip() for step in raw_steps if step.strip()]
 
 
+def normalize_title(raw_value):
+    return " ".join((raw_value or "").split())
+
+
+def validate_recipe_submission(name, raw_ingredients, raw_steps, description, difficulty):
+    field_errors = {}
+
+    normalized_name = normalize_title(name)
+    ingredients = normalize_ingredients(raw_ingredients.split(","))
+    steps = normalize_steps(raw_steps.splitlines())
+    normalized_description = description.strip()
+
+    if len(normalized_name) < 3:
+        field_errors["name"] = "recipe name must be at least 3 characters"
+    elif len(normalized_name) > 80:
+        field_errors["name"] = "recipe name must be 80 characters or fewer"
+
+    if len(normalized_description) > 280:
+        field_errors["description"] = "description must be 280 characters or fewer"
+
+    if len(ingredients) < 2:
+        field_errors["ingredients"] = "please add at least 2 unique ingredients"
+    elif len(ingredients) > 15:
+        field_errors["ingredients"] = "please keep the ingredient list to 15 items or fewer"
+    elif any(len(ingredient) > 40 for ingredient in ingredients):
+        field_errors["ingredients"] = "each ingredient should be 40 characters or fewer"
+
+    if len(steps) < 2:
+        field_errors["steps"] = "please add at least 2 cooking steps"
+    elif len(steps) > 12:
+        field_errors["steps"] = "please keep the recipe to 12 steps or fewer"
+    elif any(len(step) > 280 for step in steps):
+        field_errors["steps"] = "each step should be 280 characters or fewer"
+
+    if difficulty not in {"easy", "medium", "hard"}:
+        field_errors["difficulty"] = "please choose a valid difficulty"
+
+    cleaned_data = {
+        "name": normalized_name,
+        "ingredients": ingredients,
+        "steps": steps,
+        "description": normalized_description,
+        "difficulty": difficulty,
+    }
+    return field_errors, cleaned_data
+
+
 def categorize_recipes(selected_ingredients):
     selected_set = set(selected_ingredients)
     exact_matches = []
@@ -450,6 +497,7 @@ def new_recipe():
         return redirect_response
 
     error = None
+    field_errors = {}
     form_data = {
         "name": "",
         "ingredients": "",
@@ -459,41 +507,50 @@ def new_recipe():
     }
 
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        ingredients = normalize_ingredients(request.form.get("ingredients", "").split(","))
-        steps = normalize_steps(request.form.get("steps", "").splitlines())
+        name = request.form.get("name", "")
+        raw_ingredients = request.form.get("ingredients", "")
+        raw_steps = request.form.get("steps", "")
         description = request.form.get("description", "").strip()
         difficulty = request.form.get("difficulty", "easy").strip().lower()
         form_data = {
-            "name": name,
-            "ingredients": request.form.get("ingredients", ""),
-            "steps": request.form.get("steps", ""),
+            "name": normalize_title(name),
+            "ingredients": raw_ingredients,
+            "steps": raw_steps,
             "description": description,
             "difficulty": difficulty,
         }
 
-        if len(name) < 3:
-            error = "recipe name must be at least 3 characters"
-        elif len(ingredients) < 2:
-            error = "please add at least 2 ingredients"
-        elif len(steps) < 2:
-            error = "please add at least 2 cooking steps"
-        elif difficulty not in {"easy", "medium", "hard"}:
-            error = "please choose a valid difficulty"
+        field_errors, cleaned_data = validate_recipe_submission(
+            form_data["name"],
+            raw_ingredients,
+            raw_steps,
+            description,
+            difficulty,
+        )
+
+        if field_errors:
+            error = "please fix the highlighted recipe details"
         else:
             db = get_db()
-            instructions = "\n".join(steps)
-            description_value = description or "Shared by the community."
+            instructions = "\n".join(cleaned_data["steps"])
+            description_value = cleaned_data["description"] or "Shared by the community."
             cursor = db.execute(
                 """
                 INSERT INTO recipes (title, description, instructions, user_id, difficulty, status)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (name, description_value, instructions, session["user_id"], difficulty, "published"),
+                (
+                    cleaned_data["name"],
+                    description_value,
+                    instructions,
+                    session["user_id"],
+                    cleaned_data["difficulty"],
+                    "published",
+                ),
             )
             recipe_id = cursor.lastrowid
 
-            for ingredient_id in get_or_create_ingredient_ids(ingredients):
+            for ingredient_id in get_or_create_ingredient_ids(cleaned_data["ingredients"]):
                 db.execute(
                     """
                     INSERT INTO recipe_ingredients (recipe_id, ingredient_id)
@@ -505,7 +562,12 @@ def new_recipe():
             db.commit()
             return redirect(url_for("community"))
 
-    return render_template("share-recipe.html", error=error, form_data=form_data)
+    return render_template(
+        "share-recipe.html",
+        error=error,
+        field_errors=field_errors,
+        form_data=form_data,
+    )
 
 
 @app.route("/saved")

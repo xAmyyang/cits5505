@@ -127,6 +127,80 @@ def test_new_recipe_creates_recipe_and_ingredients(client, app):
     assert [row["name"] for row in ingredients] == ["chilli oil", "egg", "noodles"]
 
 
+def test_new_recipe_rejects_duplicate_or_single_ingredient_entries(client, app):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post(
+        "/recipes/new",
+        data={
+            "name": "egg cup",
+            "description": "Too repetitive to be useful.",
+            "ingredients": "egg, egg, egg",
+            "steps": "Boil egg.\nEat egg.",
+            "difficulty": "easy",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+    assert b"please add at least 2 unique ingredients" in response.data
+
+    with app.app_context():
+        recipe = get_db().execute(
+            "SELECT id FROM recipes WHERE title = ?",
+            ("egg cup",),
+        ).fetchone()
+
+    assert recipe is None
+
+
+def test_new_recipe_rejects_too_many_steps(client, app):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post(
+        "/recipes/new",
+        data={
+            "name": "mega prep bowl",
+            "description": "Way too many steps.",
+            "ingredients": "rice, egg, tuna",
+            "steps": "\n".join(f"Step {number}" for number in range(1, 14)),
+            "difficulty": "medium",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+    assert b"please keep the recipe to 12 steps or fewer" in response.data
+
+
+def test_new_recipe_rejects_overlong_description(client):
+    with client.session_transaction() as session:
+        session["user_id"] = 1
+        session["user_name"] = "Test Chef"
+        session["user_email"] = "chef@example.com"
+
+    response = client.post(
+        "/recipes/new",
+        data={
+            "name": "late pantry pasta",
+            "description": "x" * 281,
+            "ingredients": "pasta, garlic, oil",
+            "steps": "Boil pasta.\nMix everything.",
+            "difficulty": "easy",
+        },
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 200
+    assert b"description must be 280 characters or fewer" in response.data
+
+
 def test_save_recipe_persists_for_logged_in_user(client, app):
     with client.session_transaction() as session:
         session["user_id"] = 1
