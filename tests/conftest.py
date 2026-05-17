@@ -11,7 +11,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from app import app as flask_app
 from db import get_db, init_db
-
+from selenium import webdriver
 
 def _ensure_ingredient(db, name):
     row = db.execute("SELECT id FROM ingredients WHERE name = ?", (name,)).fetchone()
@@ -52,6 +52,7 @@ def app(tmp_path):
         TESTING=True,
         SECRET_KEY="test-secret-key",
         DATABASE=database_path,
+        WTF_CSRF_ENABLED=False,
     )
 
     with flask_app.app_context():
@@ -117,7 +118,7 @@ def app(tmp_path):
 def client(app):
     with app.test_client() as test_client:
         yield test_client
-from selenium import webdriver
+
 
 
 @pytest.fixture
