@@ -130,15 +130,19 @@
     <div class="comment-box">
       {% if comments %}
         {% for comment in comments %}
-          <div class="border rounded p-3 mb-2">
-            <p class="mb-1">
-              <strong>{{ comment.username }}</strong>
-            </p>
-            <p class="mb-1">
+          <div class="comment-card">
+            <div class="comment-user">
+              {{ comment.username }}
+            </div>
+
+            <div class="comment-text">
               {{ comment.content }}
-            </p>
+            </div>
+
             {% if comment.created_at %}
-              <small class="text-muted">{{ comment.created_at }}</small>
+              <div class="comment-time">
+                {{ comment.created_at }}
+              </div>
             {% endif %}
           </div>
         {% endfor %}
