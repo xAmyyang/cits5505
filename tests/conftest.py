@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from selenium.common.exceptions import WebDriverException
 from werkzeug.security import generate_password_hash
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -123,6 +124,9 @@ def client(app):
 
 @pytest.fixture
 def driver():
-    driver = webdriver.Chrome()
+    try:
+        driver = webdriver.Chrome()
+    except (RuntimeError, WebDriverException, PermissionError) as exc:
+        pytest.skip(f"Selenium WebDriver is unavailable in this environment: {exc}")
     yield driver
     driver.quit()

@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-bootstrap-theme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/survivechef-animations.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_profile.css') }}">"
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_profile.css') }}">
 </head>
 <body>
 
@@ -39,6 +39,12 @@
   <div class="edit-card sc-fade-up-1">
     <form method="POST" action="{{ url_for('edit_profile') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+      {% endif %}
 
       <div class="mb-3">
         <label for="username" class="form-label">👤 Username</label>
@@ -96,6 +102,7 @@
       <div class="d-flex gap-3 justify-content-center">
         <button type="submit" class="save-btn" style="background:#7DC52A; color:#fff; border:none; border-radius:50px; padding:10px 28px; font-family:'Nunito',sans-serif; font-weight:800; font-size:1rem; cursor:pointer;">💾 Save Changes</button>
         <a href="{{ url_for('profile') }}" class="cancel-btn" style="background:#fff; color:#3B6D11; border:2px solid #C0DD97; border-radius:50px; padding:10px 28px; font-family:'Nunito',sans-serif; font-weight:800; font-size:1rem; text-decoration:none; display:inline-block;">Cancel</a>
+      </div>
 
     </form>
   </div>

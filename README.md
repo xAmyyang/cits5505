@@ -12,7 +12,7 @@ Run the project locally with Flask:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python app.py
+.venv/bin/python app.py
 ```
 
 Open the app in your browser at:
@@ -21,10 +21,17 @@ Open the app in your browser at:
 http://127.0.0.1:5000/
 ```
 
+Notes:
+- The app now uses `Flask-WTF` for CSRF protection on POST forms.
+- Optional configuration can be provided through environment variables:
+  - `SECRET_KEY`
+  - `SURVIVECHEF_DATABASE`
+  - `FLASK_DEBUG=1`
+
 If you want to test with a separate temporary SQLite file instead of your normal local database:
 
 ```bash
-SURVIVECHEF_DATABASE=/tmp/survivechef-test.db python app.py
+SURVIVECHEF_DATABASE=/tmp/survivechef-test.db .venv/bin/python app.py
 ```
 
 That keeps your default `instance/survivechef.db` untouched.
@@ -41,7 +48,7 @@ Install dependencies first:
 pip install -r requirements.txt
 ```
 
-Run the unit test suite:
+Run the non-browser test suite:
 
 ```bash
 pytest tests/test_routes.py tests/test_app_flows.py
@@ -61,13 +68,9 @@ pytest
 
 Notes:
 - Selenium tests run against a live local Flask server started by pytest.
-- Browser tests use Chrome,If wants to run on Safari,Please change the conftest.py
-- Safari must have `Develop > Allow Remote Automation` enabled.
-- If needed, enable Safari driver support with:
-
-```bash
-safaridriver --enable
-```
+- Browser tests currently use Chrome through Selenium WebDriver.
+- In restricted environments, Selenium tests may be skipped if the driver cannot open a local port.
+- If you only want fast application coverage, run the non-browser suite above.
 
 ---
 
@@ -96,9 +99,11 @@ With a playful and slightly chaotic tone, SurviveChef makes cooking less intimid
 - "1 Ingredient Away" recommendation system
 - Simple, beginner-friendly recipes
 - Save favourite recipes
+- Like recipes from the results, community, and detail pages
+- Comment on recipes from the detail page
 - Upload and share recipes
 - Browse community “survival recipes”
-- User profile page
+- User profile and edit profile pages
 
 ---
 
@@ -190,9 +195,14 @@ We aim for:
 
 ### Backend
 - Flask
+- Flask-WTF / CSRF protection
 
 ### Database
 - SQLite
+
+### Testing
+- Pytest
+- Selenium
 
 ---
 
